@@ -4,21 +4,31 @@
   <meta charset="UTF-8">
   <title>Decode+</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* --- Modern Theme Variables & Base Styles --- */
+    /* --- AESTHETIC REVAMP --- */
     :root {
-        --primary-color: #2e7d32;
-        --primary-dark: #1b5e20;
-        --primary-light: #a5d6a7;
-        --background-color: #f8f9fa;
+        --primary-hue: 125; /* Green */
+        --primary-color: hsl(var(--primary-hue), 45%, 48%);
+        --primary-dark: hsl(var(--primary-hue), 45%, 38%);
+        --primary-light: hsl(var(--primary-hue), 50%, 94%);
+        --background-color: #f8f9fc;
         --surface-color: #ffffff;
-        --text-color: #212529;
-        --text-muted: #6c757d;
-        --border-color: #e9ecef;
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --text-color: #2c3e50;
+        --text-muted: #8492a6;
+        --border-color: #e0e6ed;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         --font-family: 'Poppins', sans-serif;
+        --border-radius-sm: 4px;
+        --border-radius-md: 8px;
+        --transition-speed: 0.2s ease;
+    }
+
+    /* --- Base & Typography --- */
+    *, *::before, *::after {
+        box-sizing: border-box;
     }
 
     body {
@@ -29,20 +39,32 @@
         background: var(--background-color);
         color: var(--text-color);
         font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     h2, h3, h4 {
         font-weight: 600;
-        color: var(--primary-dark);
+        color: var(--text-color);
+        margin-top: 0;
     }
-    
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.25rem; color: var(--primary-dark); }
+    h4 { font-size: 1rem; font-weight: 500;}
+
     hr {
         border: none;
         border-top: 1px solid var(--border-color);
-        margin: 1rem 0;
+        margin: 1.5rem 0;
     }
-    
-    /* --- Sidebar Navigation (Modern Style) --- */
+
+    /* --- Custom Scrollbar --- */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--background-color); }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+    /* --- Sidebar Navigation --- */
     nav {
         width: 240px;
         background: var(--primary-dark);
@@ -50,296 +72,401 @@
         display: flex;
         flex-direction: column;
         flex-shrink: 0;
+        box-shadow: var(--shadow-lg);
+        z-index: 100;
     }
     nav h2 {
         text-align: center;
         margin: 0;
         padding: 24px 16px;
         background: rgba(0,0,0,0.2);
-        font-size: 20px;
-        font-weight: 500;
+        font-size: 1.5rem;
+        font-weight: 600;
         color: white;
     }
     nav button {
-        padding: 16px 20px;
+        padding: 16px 24px;
         border: none;
         background: transparent;
         color: rgba(255, 255, 255, 0.8);
         text-align: left;
-        font-size: 15px;
+        font-size: 1rem;
         font-family: var(--font-family);
         cursor: pointer;
-        transition: background 0.2s ease, color 0.2s ease;
+        transition: all var(--transition-speed);
         border-left: 4px solid transparent;
     }
     nav button:hover {
-        background: rgba(0,0,0,0.1);
+        background: rgba(255,255,255,0.05);
         color: white;
     }
     nav button.active {
         background: var(--primary-color);
         color: white;
-        font-weight: 500;
-        border-left: 4px solid var(--primary-light);
+        font-weight: 600;
+        border-left: 4px solid white;
     }
 
-    /* --- Content Area & General Controls --- */
+    /* --- Content Area --- */
     .content {
         flex: 1;
-        padding: 24px;
+        padding: 32px;
         overflow-y: auto;
     }
     .tab { display: none; }
     .tab.active { display: block; }
     
+    /* --- Forms & Buttons --- */
     input[type="text"], input[type="date"], select {
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 14px;
+        padding: 10px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        font-size: 1rem;
         font-family: var(--font-family);
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        transition: all var(--transition-speed);
+        background-color: var(--surface-color);
     }
     input:focus, select:focus {
         outline: none;
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        box-shadow: 0 0 0 3px hsla(var(--primary-hue), 45%, 48%, 0.2);
     }
     
     button {
       font-family: var(--font-family);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all var(--transition-speed);
     }
     
     .primary-btn {
-        padding: 10px 16px;
+        padding: 10px 20px;
         background: var(--primary-color);
         border: none;
         color: white;
-        border-radius: 6px;
+        border-radius: var(--border-radius-md);
         font-weight: 500;
+        font-size: 1rem;
+        box-shadow: var(--shadow);
     }
-    .primary-btn:hover { background: var(--primary-dark); }
+    .primary-btn:hover { 
+        background: var(--primary-dark); 
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+    }
     
-    /* --- Subjects & Notes (Container Styles) --- */
+    /* --- Main Containers & Lists --- */
     .subjects-container, .notes-container {
         display: flex;
-        height: calc(100vh - 130px);
+        height: calc(100vh - 150px);
     }
     .subject-list, .note-list {
-        width: 250px;
+        width: 280px;
         border-right: 1px solid var(--border-color);
         padding: 16px;
         display: flex;
         flex-direction: column;
         background: var(--surface-color);
-        box-shadow: 1px 0 5px rgba(0,0,0,0.05);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow);
     }
     .subject-list input, .note-list input { width: 100%; box-sizing: border-box; margin-bottom: 8px;}
     .subject-list button, .note-list button { width: 100%; }
+    
     .subject-item, .note-item {
-        padding: 12px;
+        padding: 0 12px;
         margin: 4px 0;
-        border-radius: 6px;
+        border-radius: var(--border-radius-md);
         cursor: pointer;
-        transition: background 0.2s ease, color 0.2s ease;
+        font-weight: 500;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all var(--transition-speed);
+    }
+
+    .subject-item .subject-name, .note-item .note-name {
+        flex-grow: 1;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-weight: 500;
-        color: var(--text-muted);
+        padding: 12px 0;
     }
-    .subject-item:hover, .note-item:hover { background: var(--background-color); color: var(--text-color); }
+
+    .subject-item:hover, .note-item:hover { background: var(--primary-light); color: var(--primary-dark); }
     .subject-item.active, .note-item.active {
         background: var(--primary-color);
         color: white;
         font-weight: 500;
+        box-shadow: var(--shadow);
     }
+    
     .lectures-area, .note-editor-area {
         flex: 1;
-        padding: 24px;
+        padding-left: 24px;
         display: flex;
         flex-direction: column;
     }
     
-    /* --- START: REVERTED LECTURES STYLES --- */
-    .lectures-area button {
-      padding: 8px 12px;
-      border: none;
-      background: #2e7d32;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
+    /* --- Actions Dropdown Menu --- */
+    .actions-container { position: relative; flex-shrink: 0; }
+    .actions-menu-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1.25rem;
+        font-weight: bold;
+        padding: 4px 8px;
+        line-height: 1;
+        border-radius: var(--border-radius-md);
+        color: var(--text-muted);
     }
-    .lectures-area button:hover { background: #1b5e20; }
+    .subject-item.active .actions-menu-btn, .note-item.active .actions-menu-btn { color: white; }
+    .subject-item:hover .actions-menu-btn, .note-item:hover .actions-menu-btn, .task-card:hover .actions-menu-btn { color: var(--primary-dark); }
+    .actions-menu-btn:hover { background-color: rgba(0,0,0,0.1); }
+    .actions-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow-lg);
+        z-index: 10;
+        width: 160px;
+        padding: 4px 0;
+        overflow: hidden;
+        animation: fadeIn 0.1s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .actions-menu.show { display: block; }
+    .actions-menu-item {
+        display: block;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: var(--text-color);
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+    }
+    .actions-menu-item:hover { background-color: var(--primary-light); }
+    .actions-menu-item.disabled { color: #aaa; cursor: not-allowed; background-color: transparent; }
 
+    /* --- Lecture Card --- */
+    #lectureControls { align-items: center; }
     .lecture-card {
       display: flex;
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 14px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
       align-items: center;
+      transition: all var(--transition-speed);
+    }
+    .lecture-card:hover { 
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
     }
     .lecture-left iframe {
       width: 180px;
       height: 100px;
-      border-radius: 6px;
-      border: none;
+      border-radius: var(--border-radius-md);
+      border: 1px solid var(--border-color);
     }
     .lecture-right {
       flex: 1;
-      margin-left: 15px;
+      margin-right: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-    .lecture-actions {
-      display: flex;
-      gap: 10px;
-    }
+    .lecture-title-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .lecture-title-header h4 { margin: 0; }
+    .lecture-actions { display: flex; gap: 8px; }
     .lecture-actions button {
-      padding: 7px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s;
+        padding: 6px 12px;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        border: none;
+        transition: all var(--transition-speed);
     }
-    .watch-btn { background: #43a047; color: white; }
-    .watch-btn:hover { background: #2e7d32; }
-    .completed-btn { background: #039be5; color: white; }
-    .completed-btn.completed { background: #6c757d; }
-    .remove-btn { background: #e53935; color: white; }
-    .remove-btn:hover { background: #b71c1c; }
-    /* --- END: REVERTED LECTURES STYLES --- */
+    .watch-btn { background: var(--primary-light); color: var(--primary-dark); }
+    .watch-btn:hover { background: var(--primary-color); color: white; }
+    .completed-btn { background-color: #e3f2fd; color: #1e88e5; }
+    .completed-btn:hover { background-color: #1e88e5; color: white; }
+    .completed-btn.completed { background-color: #e0e0e0; color: #757575; }
+    .remove-btn { background: #ffcdd2; color: #c62828; }
+    .remove-btn:hover { background: #c62828; color: white; }
 
-    /* --- START: REVERTED TASK SCHEDULER STYLES --- */
+    /* --- Task Scheduler --- */
     .task-form {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      gap: 16px;
+      margin-bottom: 24px;
+      background: var(--surface-color);
+      padding: 16px;
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow);
       align-items: center;
     }
     .task-form input[type="text"] { flex: 1; }
-    .task-form button {
-      padding: 8px 15px;
-      border: none;
-      background: #2e7d32;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s;
-    }
-    .task-form button:hover { background: #1b5e20; }
-
-    .task-board {
-      display: flex;
-      gap: 20px;
-      justify-content: space-between;
-    }
+    .task-board { display: flex; gap: 24px; justify-content: space-between; }
     .task-column {
       flex: 1;
-      background: #ffffff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      background: var(--surface-color);
+      padding: 16px;
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow);
     }
-    .task-column h3 {
-      border-bottom: 2px solid #e0e0e0;
-      padding-bottom: 10px;
-    }
-    .tasks-container {
-      min-height: 200px;
-    }
+    .task-column h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px; }
+    .tasks-container { min-height: 200px; }
     .task-card {
-      background: #f1f8f1;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background: var(--primary-light);
+      padding: 12px; /* MODIFIED */
+      border-radius: var(--border-radius-md);
+      margin-bottom: 12px;
+      box-shadow: none;
+      border: 1px solid var(--border-color);
       border-left: 5px solid;
+      display: flex; /* MODIFIED */
+      justify-content: space-between; /* MODIFIED */
+      align-items: center; /* MODIFIED */
     }
-    .task-card.priority-high { border-left-color: #e53935; }
-    .task-card.priority-medium { border-left-color: #fdd835; }
-    .task-card.priority-low { border-left-color: #43a047; }
-    
-    .task-card p {
-      margin: 0 0 8px;
-      font-weight: 500;
-    }
-    .task-card .task-meta {
-      font-size: 12px;
-      color: #555;
-      margin-bottom: 10px;
-    }
-    .task-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-    .task-actions button {
-      background: none;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 18px;
-      padding: 2px 6px;
-    }
-    .task-card.done {
-        text-decoration: line-through;
-        opacity: 0.7;
-        background: #e8f5e9;
-    }
-    /* --- END: REVERTED TASK SCHEDULER STYLES --- */
+    .task-card-content { flex-grow: 1; } /* NEW */
+    .task-card.priority-high { border-left-color: #ef5350; }
+    .task-card.priority-medium { border-left-color: #ffca28; }
+    .task-card.priority-low { border-left-color: #66bb6a; }
+    .task-card p { margin: 0 0 4px; font-weight: 500; font-size: 0.95rem;} /* MODIFIED */
+    .task-card .task-meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0; }
+    .task-card.done { text-decoration: line-through; opacity: 0.7; background: #e8f5e9; }
 
-    /* --- Notes Editor (Modern Style) --- */
+    /* --- Notes Editor --- */
+    .note-editor-area #noteEditorContainer {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
     .note-toolbar {
-        background: var(--background-color);
+        background: var(--surface-color);
         padding: 8px;
         border: 1px solid var(--border-color);
         border-bottom: none;
-        border-radius: 6px 6px 0 0;
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        display: flex;
+        gap: 4px;
     }
     .note-toolbar button {
-        padding: 5px 10px;
-        border-radius: 5px;
-        border: 1px solid transparent;
+        padding: 6px 12px;
+        border-radius: var(--border-radius-md);
+        border: none;
         background: transparent;
     }
-    .note-toolbar button:hover { background: rgba(0,0,0,0.05); }
+    .note-toolbar button:hover { background: var(--primary-light); color: var(--primary-dark); }
     #notes-editor {
         width: 100%;
-        flex-grow: 1; /* Allows it to fill the space */
+        flex-grow: 1;
         box-sizing: border-box;
         border: 1px solid var(--border-color);
-        border-radius: 0 0 6px 6px;
+        border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
         padding: 16px;
-        font-size: 15px;
+        font-size: 1rem;
+        line-height: 1.6;
         font-family: var(--font-family);
         overflow-y: auto;
         background: var(--surface-color);
     }
-    #notes-editor:focus { outline: none; border-color: var(--primary-color); }
+    #notes-editor:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px hsla(var(--primary-hue), 45%, 48%, 0.2);
+    }
+
+    /* --- Progress Tab Styles --- */
+    .progress-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    .summary-card {
+        background-color: var(--surface-color);
+        padding: 16px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow);
+        text-align: center;
+        transition: all var(--transition-speed);
+    }
+    .summary-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+    }
+    .summary-card .count {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    .summary-card .label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+    .progress-bar-container {
+        width: 100%;
+        height: 24px;
+        background-color: var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        margin-top: 16px;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background-color: var(--primary-color);
+        border-radius: 12px;
+        transition: width 0.5s ease-in-out;
+    }
+    .progress-bar-label {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        line-height: 24px;
+        color: white;
+        font-weight: 500;
+        font-size: 0.8rem;
+    }
+    #subjectProgressList .subject-progress-item {
+        background-color: var(--surface-color);
+        padding: 16px;
+        border-radius: var(--border-radius-md);
+        margin-bottom: 16px;
+        box-shadow: var(--shadow);
+    }
+    .subject-progress-item h4 {
+        margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
 
   <nav>
     <h2>📚 Decode+</h2>
-    <button class="active" onclick="openTab(event, 'subjects')">📖 Subjects & Lectures</button>
+    <button class="active" onclick="openTab(event, 'subjects')">📖 Subjects</button>
+    <button onclick="openTab(event, 'notes')">📔 Notes</button>
+    <button onclick="openTab(event, 'tasks')">📅 Tasks</button>
     <button onclick="openTab(event, 'quizzes')">📝 Quizzes</button>
     <button onclick="openTab(event, 'progress')">📊 Progress</button>
-    <button onclick="openTab(event, 'notes')">📔 Notes</button>
-    <button onclick="openTab(event, 'tasks')">📅 Task Scheduler</button>
   </nav>
 
   <div class="content">
@@ -347,26 +474,28 @@
       <h2>Subjects & Lectures</h2>
       <div class="subjects-container">
         <div class="subject-list">
-          <input id="subjectName" type="text" placeholder="Add Subject">
+          <input id="subjectName" type="text" placeholder="Add New Subject">
           <button class="primary-btn" onclick="addSubject()">+ Add Subject</button>
           <hr>
           <div id="subjectList"></div>
         </div>
         <div class="lectures-area">
-          <h3 id="subjectTitle">Select a subject</h3>
-          <div id="lectureControls" style="display:none;">
-            <input id="lectureUrl" type="text" placeholder="YouTube link">
-            <input id="lectureTitle" type="text" placeholder="Lecture title">
-            <button onclick="addLecture()">+ Add Lecture</button>
-            <hr>
+          <h3 id="subjectTitle">Select a subject to view lectures</h3>
+          <div id="lectureControls" style="display:none; gap: 10px; margin-bottom: 10px;">
+            <input id="lectureUrl" type="text" placeholder="YouTube link" style="flex: 1;">
+            <input id="lectureTitle" type="text" placeholder="Lecture title" style="flex: 1;">
+            <button class="primary-btn" onclick="addLecture()">+ Add</button>
           </div>
+          <hr id="lectureHr" style="display: none;">
           <div id="lectureList"></div>
         </div>
       </div>
     </div>
 
     <div id="quizzes" class="tab"><h2>Quizzes</h2></div>
-    <div id="progress" class="tab"><h2>Progress</h2></div>
+    <div id="progress" class="tab">
+        <!-- Content will be dynamically generated by renderProgress() -->
+    </div>
     
     <div id="notes" class="tab">
       <h2>My Notes</h2>
@@ -380,17 +509,17 @@
         <div class="note-editor-area">
           <h3 id="currentNoteTitle">Select a note to get started</h3>
           <div id="noteEditorContainer" style="display:none;">
-             <button class="remove-btn" style="float: right; margin-bottom: 10px;" onclick="deleteCurrentNote()">Delete This Note</button>
-             
-             <div class="note-toolbar">
-               <button title="Bold" onclick="formatDoc('bold')"><b>B</b></button>
-               <button title="Bulleted List" onclick="formatDoc('insertUnorderedList')">●</button>
-               <button title="Numbered List" onclick="formatDoc('insertOrderedList')">1.</button>
-               <button title="Highlight" onclick="formatDoc('backColor', '#FFFFA7')">🎨 Highlight</button>
-               <button title="Remove Highlight" onclick="formatDoc('backColor', 'white')">🚫</button>
-             </div>
-             
-             <div id="notes-editor" contenteditable="true" oninput="handleNoteAutosave()"></div>
+              <button class="remove-btn" style="float: right; margin-bottom: 10px; font-size: 0.9rem;" onclick="deleteCurrentNote()">Delete This Note</button>
+              
+              <div class="note-toolbar">
+                <button title="Bold" onclick="formatDoc('bold')"><b>B</b></button>
+                <button title="Bulleted List" onclick="formatDoc('insertUnorderedList')">●</button>
+                <button title="Numbered List" onclick="formatDoc('insertOrderedList')">1.</button>
+                <button title="Highlight" onclick="formatDoc('backColor', '#FFFFA7')">🎨</button>
+                <button title="Remove Highlight" onclick="formatDoc('backColor', 'white')">🚫</button>
+              </div>
+              
+              <div id="notes-editor" contenteditable="true" oninput="handleNoteAutosave()"></div>
           </div>
         </div>
       </div>
@@ -406,7 +535,7 @@
           <option value="medium">Medium Priority</option>
           <option value="high">High Priority</option>
         </select>
-        <button onclick="addTask()">+ Add Task</button>
+        <button class="primary-btn" onclick="addTask()">+ Add Task</button>
       </div>
       <div class="task-board">
         <div class="task-column">
@@ -428,10 +557,49 @@
   <script>
     // Tab navigation
     function openTab(event, id) {
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       event.currentTarget.classList.add('active');
+      document.getElementById(id).classList.add('active');
+
+      if (id === 'progress') {
+          renderProgress();
+      }
+    }
+
+    // --- HELPER FUNCTIONS FOR ACTION MENUS ---
+    function toggleActionMenu(event) {
+        event.stopPropagation();
+        closeAllActionMenus(event.currentTarget);
+        const menu = event.currentTarget.nextElementSibling;
+        menu.classList.toggle('show');
+    }
+    function closeAllActionMenus(exceptElement = null) {
+        document.querySelectorAll('.actions-menu.show').forEach(menu => {
+            if (!exceptElement || !exceptElement.parentElement.contains(menu)) {
+                menu.classList.remove('show');
+            }
+        });
+    }
+    window.addEventListener('click', () => {
+        closeAllActionMenus();
+    });
+
+    // --- DATA STORAGE ---
+    function saveSubjects() { localStorage.setItem('lmsSubjects', JSON.stringify(subjects)); }
+    function loadSubjects() {
+        const stored = localStorage.getItem('lmsSubjects');
+        if (stored) subjects = JSON.parse(stored);
+    }
+    function saveNotes() { localStorage.setItem('lmsNotes', JSON.stringify(notes)); }
+    function loadNotes() {
+        const stored = localStorage.getItem('lmsNotes');
+        if (stored) notes = JSON.parse(stored);
+    }
+    function saveTasks() { localStorage.setItem('lmsTasks', JSON.stringify(tasks)); }
+    function loadTasks() {
+        const stored = localStorage.getItem('lmsTasks');
+        if (stored) tasks = JSON.parse(stored);
     }
 
     // --- SUBJECTS & LECTURES SCRIPT ---
@@ -443,6 +611,7 @@
       if (!name) return alert("Enter subject name");
       subjects.push({ name, lectures: [] });
       document.getElementById('subjectName').value = "";
+      saveSubjects();
       renderSubjects();
     }
     function renderSubjects() {
@@ -451,8 +620,22 @@
       subjects.forEach((s, i) => {
         const div = document.createElement("div");
         div.className = "subject-item" + (currentSubject === i ? " active" : "");
-        div.innerText = s.name;
-        div.onclick = () => selectSubject(i);
+
+        const moveUpHTML = i > 0 ? `<button class="actions-menu-item" onclick="moveSubject(${i}, 'up', event)">Move Up</button>` : `<button class="actions-menu-item disabled" disabled>Move Up</button>`;
+        const moveDownHTML = i < subjects.length - 1 ? `<button class="actions-menu-item" onclick="moveSubject(${i}, 'down', event)">Move Down</button>` : `<button class="actions-menu-item disabled" disabled>Move Down</button>`;
+        
+        div.innerHTML = `
+            <span class="subject-name" onclick="selectSubject(${i})">${s.name}</span>
+            <div class="actions-container">
+                <button class="actions-menu-btn" onclick="toggleActionMenu(event)">⋮</button>
+                <div class="actions-menu">
+                    <button class="actions-menu-item" onclick="editSubject(${i}, event)">Edit Title</button>
+                    ${moveUpHTML}
+                    ${moveDownHTML}
+                    <button class="actions-menu-item" onclick="deleteSubject(${i}, event)">Delete</button>
+                </div>
+            </div>
+        `;
         list.appendChild(div);
       });
     }
@@ -460,8 +643,53 @@
       currentSubject = index;
       document.getElementById('subjectTitle').innerText = subjects[index].name;
       document.getElementById('lectureControls').style.display = "flex";
+      document.getElementById('lectureHr').style.display = "block";
       renderSubjects();
       renderLectures();
+    }
+    function editSubject(index, event) {
+        event.stopPropagation();
+        const subject = subjects[index];
+        const newName = prompt("Enter new name for subject:", subject.name);
+        if (newName && newName.trim() !== "") {
+            subject.name = newName.trim();
+            if (currentSubject === index) {
+                document.getElementById('subjectTitle').innerText = subject.name;
+            }
+            saveSubjects();
+            renderSubjects();
+        }
+    }
+    function deleteSubject(index, event) {
+        event.stopPropagation();
+        if (confirm(`Are you sure you want to delete "${subjects[index].name}"? This will delete all its lectures.`)) {
+            if (currentSubject === index) {
+                currentSubject = null;
+                document.getElementById('subjectTitle').innerText = "Select a subject";
+                document.getElementById('lectureControls').style.display = "none";
+                document.getElementById('lectureHr').style.display = "none";
+                document.getElementById('lectureList').innerHTML = "";
+            } else if (currentSubject > index) {
+                currentSubject--;
+            }
+            subjects.splice(index, 1);
+            saveSubjects();
+            renderSubjects();
+        }
+    }
+    function moveSubject(index, direction, event) {
+        event.stopPropagation();
+        if (direction === 'up' && index > 0) {
+            [subjects[index], subjects[index - 1]] = [subjects[index - 1], subjects[index]];
+            if (currentSubject === index) currentSubject = index - 1;
+            else if (currentSubject === index - 1) currentSubject = index;
+        } else if (direction === 'down' && index < subjects.length - 1) {
+            [subjects[index], subjects[index + 1]] = [subjects[index + 1], subjects[index]];
+            if (currentSubject === index) currentSubject = index + 1;
+            else if (currentSubject === index + 1) currentSubject = index;
+        }
+        saveSubjects();
+        renderSubjects();
     }
     function addLecture() {
       if (currentSubject === null) return alert("Select a subject first");
@@ -471,35 +699,76 @@
       subjects[currentSubject].lectures.push({ title, url, completed: false });
       document.getElementById('lectureUrl').value = "";
       document.getElementById('lectureTitle').value = "";
+      saveSubjects();
       renderLectures();
     }
     function renderLectures() {
       const list = document.getElementById('lectureList');
       list.innerHTML = "";
       if (currentSubject === null || !subjects[currentSubject]) return;
-      subjects[currentSubject].lectures.forEach((lec, i) => {
+      const lectures = subjects[currentSubject].lectures;
+      lectures.forEach((lec, i) => {
         const div = document.createElement("div");
         div.className = "lecture-card";
+
+        const moveUpHTML = i > 0 ? `<button class="actions-menu-item" onclick="moveLecture(${i}, 'up', event)">Move Up</button>` : `<button class="actions-menu-item disabled" disabled>Move Up</button>`;
+        const moveDownHTML = i < lectures.length - 1 ? `<button class="actions-menu-item" onclick="moveLecture(${i}, 'down', event)">Move Down</button>` : `<button class="actions-menu-item disabled" disabled>Move Down</button>`;
+
         div.innerHTML = `
-          <div class="lecture-left"><iframe src="${convertToEmbed(lec.url)}"></iframe></div>
           <div class="lecture-right">
-            <h4>${lec.completed ? "✔ " : ""}${lec.title}</h4>
+            <div class="lecture-title-header">
+                <h4>${lec.completed ? "✔ " : ""}${lec.title}</h4>
+                <div class="actions-container">
+                    <button class="actions-menu-btn" onclick="toggleActionMenu(event)">⋮</button>
+                    <div class="actions-menu">
+                        <button class="actions-menu-item" onclick="editLectureTitle(${i}, event)">Edit Title</button>
+                        ${moveUpHTML}
+                        ${moveDownHTML}
+                        <button class="actions-menu-item" onclick="removeLecture(${i}, event)">Remove</button>
+                    </div>
+                </div>
+            </div>
             <div class="lecture-actions">
               <button class="watch-btn" onclick="window.open('${lec.url}', '_blank')">▶ Watch</button>
-              <button class="completed-btn ${lec.completed ? "completed" : ""}" onclick="toggleCompleted(${i})">${lec.completed ? "✔ Completed" : "Mark Completed"}</button>
-              <button class="remove-btn" onclick="removeLecture(${i})">❌ Remove</button>
+              <button class="completed-btn ${lec.completed ? "completed" : ""}" onclick="toggleCompleted(${i})">${lec.completed ? "✔ Completed" : "Mark as Done"}</button>
             </div>
-          </div>`;
+          </div>
+          <div class="lecture-left"><iframe src="${convertToEmbed(lec.url)}"></iframe></div>
+          `;
         list.appendChild(div);
       });
     }
     function toggleCompleted(i) {
       subjects[currentSubject].lectures[i].completed = !subjects[currentSubject].lectures[i].completed;
+      saveSubjects();
       renderLectures();
     }
-    function removeLecture(i) {
+    function removeLecture(i, event) {
+      if (event) event.stopPropagation();
       subjects[currentSubject].lectures.splice(i, 1);
+      saveSubjects();
       renderLectures();
+    }
+    function editLectureTitle(lectureIndex, event) {
+        event.stopPropagation();
+        const lecture = subjects[currentSubject].lectures[lectureIndex];
+        const newTitle = prompt("Enter new lecture title:", lecture.title);
+        if (newTitle && newTitle.trim() !== "") {
+            lecture.title = newTitle.trim();
+            saveSubjects();
+            renderLectures();
+        }
+    }
+    function moveLecture(index, direction, event) {
+        event.stopPropagation();
+        const lectures = subjects[currentSubject].lectures;
+        if (direction === 'up' && index > 0) {
+            [lectures[index], lectures[index - 1]] = [lectures[index - 1], lectures[index]];
+        } else if (direction === 'down' && index < lectures.length - 1) {
+            [lectures[index], lectures[index + 1]] = [lectures[index + 1], lectures[index]];
+        }
+        saveSubjects();
+        renderLectures();
     }
     function convertToEmbed(url) {
       try {
@@ -516,27 +785,15 @@
 
     function formatDoc(command, value = null) {
       document.execCommand(command, false, value);
-      document.getElementById('notes-editor').focus(); // Return focus to the editor
+      document.getElementById('notes-editor').focus();
     }
-    function loadNotes() {
-      const storedNotes = localStorage.getItem('lmsNotes');
-      if (storedNotes) {
-        notes = JSON.parse(storedNotes);
-      }
-    }
-    function saveNotes() {
-      localStorage.setItem('lmsNotes', JSON.stringify(notes));
-    }
+    
     function addNote() {
       const titleInput = document.getElementById('noteTitleInput');
       const title = titleInput.value.trim();
       if (!title) return alert("Please enter a title for the note.");
       
-      const newNote = {
-        id: Date.now(),
-        title: title,
-        content: `<p>This is your new note: <b>${title}</b></p>`
-      };
+      const newNote = { id: Date.now(), title: title, content: `<p>This is your new note: <b>${title}</b></p>` };
       notes.push(newNote);
       titleInput.value = '';
       saveNotes();
@@ -550,33 +807,82 @@
 
       document.getElementById('currentNoteTitle').innerText = note.title;
       document.getElementById('notes-editor').innerHTML = note.content;
-      document.getElementById('noteEditorContainer').style.display = 'block';
+      document.getElementById('noteEditorContainer').style.display = 'flex';
       renderNotesList();
     }
     function deleteCurrentNote() {
         if (currentNoteId === null) return;
-        if (!confirm('Are you sure you want to delete this note?')) return;
+        deleteNote(currentNoteId);
+    }
+    function deleteNote(noteId, event) {
+        if (event) event.stopPropagation();
+        const noteIndex = notes.findIndex(n => n.id === noteId);
+        if (noteIndex === -1) return;
 
-        notes = notes.filter(n => n.id !== currentNoteId);
+        if (!confirm(`Are you sure you want to delete the note "${notes[noteIndex].title}"?`)) return;
+
+        notes.splice(noteIndex, 1);
         saveNotes();
         
-        currentNoteId = null;
-        document.getElementById('currentNoteTitle').innerText = "Select a note to get started";
-        document.getElementById('notes-editor').innerHTML = '';
-        document.getElementById('noteEditorContainer').style.display = 'none';
+        if (currentNoteId === noteId) {
+            currentNoteId = null;
+            document.getElementById('currentNoteTitle').innerText = "Select a note to get started";
+            document.getElementById('notes-editor').innerHTML = '';
+            document.getElementById('noteEditorContainer').style.display = 'none';
+        }
+        renderNotesList();
+    }
+    function editNoteTitle(noteId, event) {
+        event.stopPropagation();
+        const note = notes.find(n => n.id === noteId);
+        if (!note) return;
+        const newTitle = prompt("Enter new title for the note:", note.title);
+        if (newTitle && newTitle.trim() !== "") {
+            note.title = newTitle.trim();
+            if (currentNoteId === noteId) {
+                document.getElementById('currentNoteTitle').innerText = note.title;
+            }
+            saveNotes();
+            renderNotesList();
+        }
+    }
+    function moveNote(noteId, direction, event) {
+        event.stopPropagation();
+        const index = notes.findIndex(n => n.id === noteId);
+
+        if (direction === 'up' && index > 0) {
+            [notes[index], notes[index - 1]] = [notes[index - 1], notes[index]];
+        } else if (direction === 'down' && index < notes.length - 1) {
+            [notes[index], notes[index + 1]] = [notes[index + 1], notes[index]];
+        }
+        saveNotes();
         renderNotesList();
     }
     function renderNotesList() {
       const listEl = document.getElementById('notesList');
       listEl.innerHTML = '';
-      notes.forEach(note => {
+      notes.forEach((note, i) => {
         const item = document.createElement('div');
         item.className = 'note-item';
         if (note.id === currentNoteId) {
           item.classList.add('active');
         }
-        item.innerText = note.title;
-        item.onclick = () => selectNote(note.id);
+
+        const moveUpHTML = i > 0 ? `<button class="actions-menu-item" onclick="moveNote(${note.id}, 'up', event)">Move Up</button>` : `<button class="actions-menu-item disabled" disabled>Move Up</button>`;
+        const moveDownHTML = i < notes.length - 1 ? `<button class="actions-menu-item" onclick="moveNote(${note.id}, 'down', event)">Move Down</button>` : `<button class="actions-menu-item disabled" disabled>Move Down</button>`;
+
+        item.innerHTML = `
+            <span class="note-name" onclick="selectNote(${note.id})">${note.title}</span>
+            <div class="actions-container">
+                <button class="actions-menu-btn" onclick="toggleActionMenu(event)">⋮</button>
+                <div class="actions-menu">
+                    <button class="actions-menu-item" onclick="editNoteTitle(${note.id}, event)">Edit Title</button>
+                    ${moveUpHTML}
+                    ${moveDownHTML}
+                    <button class="actions-menu-item" onclick="deleteNote(${note.id}, event)">Delete</button>
+                </div>
+            </div>
+        `;
         listEl.appendChild(item);
       });
     }
@@ -590,13 +896,8 @@
         }
     }
 
-
     // --- TASK SCHEDULER SCRIPT ---
-    let tasks = [
-        { id: 1, text: "Finish project proposal", dueDate: "2025-09-15", priority: "high", status: "todo" },
-        { id: 2, text: "Read Chapter 4 of Physics", dueDate: "2025-09-14", priority: "medium", status: "inprogress" },
-        { id: 3, text: "Submit Math assignment", dueDate: "2025-09-11", priority: "high", status: "done" }
-    ];
+    let tasks = [];
     function addTask() {
       const taskInput = document.getElementById('taskInput');
       const dueDateInput = document.getElementById('taskDueDate');
@@ -607,15 +908,48 @@
       taskInput.value = '';
       dueDateInput.value = '';
       priorityInput.value = 'low';
+      saveTasks();
       renderTasks();
     }
-    function moveTask(taskId, newStatus) {
+    function moveTask(taskId, newStatus, event) {
+      if(event) event.stopPropagation();
       const task = tasks.find(t => t.id === taskId);
-      if (task) { task.status = newStatus; renderTasks(); }
+      if (task) { 
+          task.status = newStatus; 
+          saveTasks();
+          renderTasks(); 
+      }
     }
-    function deleteTask(taskId) {
+    function deleteTask(taskId, event) {
+      if(event) event.stopPropagation();
       tasks = tasks.filter(t => t.id !== taskId);
+      saveTasks();
       renderTasks();
+    }
+    function editTask(taskId, event) {
+        event.stopPropagation();
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        const newText = prompt("Enter new task description:", task.text);
+        if (newText === null) return; // User cancelled
+
+        const newDueDate = prompt("Enter new due date (YYYY-MM-DD):", task.dueDate);
+        if (newDueDate === null) return;
+
+        const newPriority = prompt("Enter new priority (low, medium, high):", task.priority);
+        if (newPriority === null) return;
+
+        task.text = newText.trim();
+        task.dueDate = newDueDate.trim();
+        if (['low', 'medium', 'high'].includes(newPriority.toLowerCase())) {
+            task.priority = newPriority.toLowerCase();
+        } else {
+            alert("Invalid priority. Please enter 'low', 'medium', or 'high'.");
+        }
+        
+        saveTasks();
+        renderTasks();
     }
     function renderTasks() {
       const containers = {
@@ -628,27 +962,137 @@
         const taskCard = document.createElement('div');
         taskCard.className = `task-card priority-${task.priority} ${task.status === 'done' ? 'done' : ''}`;
         
-        // REVERTED EMOJI BUTTONS
-        let buttons = '';
-        if (task.status === 'todo') buttons = `<button title="Move to In Progress" onclick="moveTask(${task.id}, 'inprogress')">▶️</button>`;
-        else if (task.status === 'inprogress') buttons = `<button title="Move to To Do" onclick="moveTask(${task.id}, 'todo')">◀️</button><button title="Move to Done" onclick="moveTask(${task.id}, 'done')">✔️</button>`;
-        else buttons = `<button title="Move back to In Progress" onclick="moveTask(${task.id}, 'inprogress')">🔄</button>`;
+        let moveMenuItems = '';
+        if (task.status === 'todo') {
+            moveMenuItems = `<button class="actions-menu-item" onclick="moveTask(${task.id}, 'inprogress', event)">Move to In Progress</button>`;
+        } else if (task.status === 'inprogress') {
+            moveMenuItems = `
+                <button class="actions-menu-item" onclick="moveTask(${task.id}, 'todo', event)">Move to To Do</button>
+                <button class="actions-menu-item" onclick="moveTask(${task.id}, 'done', event)">Move to Done</button>`;
+        } else { // done
+            moveMenuItems = `<button class="actions-menu-item" onclick="moveTask(${task.id}, 'inprogress', event)">Move to In Progress</button>`;
+        }
         
         taskCard.innerHTML = `
-          <p>${task.text}</p>
-          ${task.dueDate ? `<div class="task-meta">Due: ${task.dueDate}</div>` : ''}
-          <div class="task-actions">${buttons}<button title="Delete Task" onclick="deleteTask(${task.id})">🗑️</button></div>`;
+            <div class="task-card-content">
+                <p>${task.text}</p>
+                ${task.dueDate ? `<div class="task-meta">Due: ${task.dueDate}</div>` : ''}
+            </div>
+            <div class="actions-container">
+                <button class="actions-menu-btn" onclick="toggleActionMenu(event)">⋮</button>
+                <div class="actions-menu">
+                    <button class="actions-menu-item" onclick="editTask(${task.id}, event)">Edit</button>
+                    ${moveMenuItems}
+                    <button class="actions-menu-item" onclick="deleteTask(${task.id}, event)">Delete</button>
+                </div>
+            </div>`;
         containers[task.status].appendChild(taskCard);
       });
     }
     
+    // --- PROGRESS TAB SCRIPT ---
+    function renderProgress() {
+        const progressTab = document.getElementById('progress');
+
+        const totalSubjects = subjects.length;
+        const totalLectures = subjects.reduce((sum, subject) => sum + subject.lectures.length, 0);
+        const completedLectures = subjects.reduce((sum, subject) => {
+            return sum + subject.lectures.filter(lec => lec.completed).length;
+        }, 0);
+        const overallPercentage = totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
+        
+        const doneTasks = tasks.filter(task => task.status === 'done').length;
+        const todoTasks = tasks.filter(task => task.status === 'todo').length;
+        const inprogressTasks = tasks.filter(task => task.status === 'inprogress').length;
+
+        let subjectProgressHTML = '';
+        if (subjects.length > 0) {
+            subjects.forEach(subject => {
+                const subjectTotal = subject.lectures.length;
+                const subjectCompleted = subject.lectures.filter(lec => lec.completed).length;
+                const subjectPercentage = subjectTotal > 0 ? (subjectCompleted / subjectTotal) * 100 : 0;
+                subjectProgressHTML += `
+                    <div class="subject-progress-item">
+                        <h4>${subject.name} <span style="font-weight: 400; color: var(--text-muted); font-size: 0.9rem;">(${subjectCompleted}/${subjectTotal})</span></h4>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${subjectPercentage}%;"></div>
+                            <span class="progress-bar-label">${Math.round(subjectPercentage)}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            subjectProgressHTML = '<p>No subjects added yet. Add a subject and some lectures to track your progress!</p>';
+        }
+
+        progressTab.innerHTML = `
+            <h2>Your Progress</h2>
+            <div class="progress-container">
+                <div class="progress-summary">
+                    <div class="summary-card">
+                        <div class="count">${totalSubjects}</div>
+                        <div class="label">Subjects</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="count">${totalLectures}</div>
+                        <div class="label">Lectures</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="count">${doneTasks}</div>
+                        <div class="label">Tasks Done</div>
+                    </div>
+                </div>
+                <h3>Overall Lecture Completion</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: ${overallPercentage}%;"></div>
+                    <span class="progress-bar-label">${completedLectures} / ${totalLectures} Lectures Completed (${Math.round(overallPercentage)}%)</span>
+                </div>
+                <hr>
+                <h3>Task Breakdown</h3>
+                <div class="progress-summary">
+                     <div class="summary-card">
+                        <div class="count">${todoTasks}</div>
+                        <div class="label">To Do</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="count">${inprogressTasks}</div>
+                        <div class="label">In Progress</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="count">${doneTasks}</div>
+                        <div class="label">Done</div>
+                    </div>
+                </div>
+                <hr>
+                <h3>Progress by Subject</h3>
+                <div id="subjectProgressList">
+                    ${subjectProgressHTML}
+                </div>
+            </div>
+        `;
+    }
+    
     // --- INITIAL APP RENDER ---
     document.addEventListener('DOMContentLoaded', () => {
+        loadSubjects();
         loadNotes();
+        loadTasks();
+
+        if (tasks.length === 0) {
+            tasks = [
+                { id: 1, text: "Finish project proposal", dueDate: "2025-09-13", priority: "high", status: "todo" },
+                { id: 2, text: "Read Chapter 4 of Physics", dueDate: "2025-09-14", priority: "medium", status: "inprogress" },
+                { id: 3, text: "Submit Math assignment", dueDate: "2025-09-11", priority: "high", status: "done" }
+            ];
+        }
+
+        renderSubjects();
         renderNotesList();
         renderTasks();
+        renderProgress();
     });
 
   </script>
 </body>
 </html>
+
