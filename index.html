@@ -41,6 +41,7 @@
         font-weight: 400;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        overflow: hidden; 
     }
 
     h2, h3, h4 {
@@ -75,6 +76,7 @@
         box-shadow: var(--shadow-lg);
         z-index: 100;
     }
+    .nav-buttons { flex-grow: 1; }
     nav h2 {
         text-align: center;
         margin: 0;
@@ -95,6 +97,7 @@
         cursor: pointer;
         transition: all var(--transition-speed);
         border-left: 4px solid transparent;
+        width: 100%;
     }
     nav button:hover {
         background: rgba(255,255,255,0.05);
@@ -111,13 +114,23 @@
     .content {
         flex: 1;
         padding: 32px;
-        overflow-y: auto;
+        overflow: hidden;
     }
-    .tab { display: none; }
-    .tab.active { display: block; }
+    .tab {
+        display: none;
+        height: 100%;
+        flex-direction: column;
+    }
+    .tab.active {
+        display: flex;
+    }
+    .tab > h2 { 
+        margin-bottom: 24px;
+        flex-shrink: 0;
+    }
     
     /* --- Forms & Buttons --- */
-    input[type="text"], input[type="date"], select {
+    input[type="text"], input[type="date"], select, textarea {
         padding: 10px 14px;
         border: 1px solid var(--border-color);
         border-radius: var(--border-radius-md);
@@ -125,8 +138,13 @@
         font-family: var(--font-family);
         transition: all var(--transition-speed);
         background-color: var(--surface-color);
+        width: 100%;
     }
-    input:focus, select:focus {
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    input:focus, select:focus, textarea:focus {
         outline: none;
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px hsla(var(--primary-hue), 45%, 48%, 0.2);
@@ -155,11 +173,12 @@
     }
     
     /* --- Main Containers & Lists --- */
-    .subjects-container, .notes-container {
+    .subjects-container, .notes-container, .quizzes-container {
         display: flex;
-        height: calc(100vh - 150px);
+        flex-grow: 1; 
+        min-height: 0; 
     }
-    .subject-list, .note-list {
+    .subject-list, .note-list, .quiz-subject-list {
         width: 280px;
         border-right: 1px solid var(--border-color);
         padding: 16px;
@@ -170,9 +189,16 @@
         box-shadow: var(--shadow);
     }
     .subject-list input, .note-list input { width: 100%; box-sizing: border-box; margin-bottom: 8px;}
-    .subject-list button, .note-list button { width: 100%; }
+    .subject-list button, .note-list button { width: 100%; flex-shrink: 0; }
     
-    .subject-item, .note-item {
+    .list-scroll-area {
+        flex-grow: 1;
+        overflow-y: auto;
+        min-height: 0;
+        margin-top: 1rem;
+    }
+
+    .subject-item, .note-item, .quiz-subject-item {
         padding: 0 12px;
         margin: 4px 0;
         border-radius: var(--border-radius-md);
@@ -185,7 +211,7 @@
         transition: all var(--transition-speed);
     }
 
-    .subject-item .subject-name, .note-item .note-name {
+    .subject-item .subject-name, .note-item .note-name, .quiz-subject-item .subject-name {
         flex-grow: 1;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -193,19 +219,24 @@
         padding: 12px 0;
     }
 
-    .subject-item:hover, .note-item:hover { background: var(--primary-light); color: var(--primary-dark); }
-    .subject-item.active, .note-item.active {
+    .subject-item:hover, .note-item:hover, .quiz-subject-item:hover { background: var(--primary-light); color: var(--primary-dark); }
+    .subject-item.active, .note-item.active, .quiz-subject-item.active {
         background: var(--primary-color);
         color: white;
         font-weight: 500;
         box-shadow: var(--shadow);
     }
     
-    .lectures-area, .note-editor-area {
+    .lectures-area, .note-editor-area, .quizzes-area {
         flex: 1;
         padding-left: 24px;
         display: flex;
         flex-direction: column;
+        min-height: 0;
+    }
+    .lectures-area > h3, .note-editor-area > h3, .quizzes-area > h3 {
+        margin-bottom: 16px;
+        flex-shrink: 0;
     }
     
     /* --- Actions Dropdown Menu --- */
@@ -221,8 +252,8 @@
         border-radius: var(--border-radius-md);
         color: var(--text-muted);
     }
-    .subject-item.active .actions-menu-btn, .note-item.active .actions-menu-btn { color: white; }
-    .subject-item:hover .actions-menu-btn, .note-item:hover .actions-menu-btn, .task-card:hover .actions-menu-btn { color: var(--primary-dark); }
+    .subject-item.active .actions-menu-btn, .note-item.active .actions-menu-btn, .quiz-subject-item.active .actions-menu-btn { color: white; }
+    .subject-item:hover .actions-menu-btn, .note-item:hover .actions-menu-btn, .task-card:hover .actions-menu-btn, .quiz-subject-item:hover .actions-menu-btn { color: var(--primary-dark); }
     .actions-menu-btn:hover { background-color: rgba(0,0,0,0.1); }
     .actions-menu {
         display: none;
@@ -260,12 +291,13 @@
 
     /* --- Lecture Card --- */
     #lectureControls { align-items: center; }
+    #lectureList { flex-grow: 1; overflow-y: auto; min-height: 0; } 
     .lecture-card {
       display: flex;
       background: var(--surface-color);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-md);
-      padding: 16px;
+      padding: 12px;
       margin-bottom: 16px;
       box-shadow: var(--shadow);
       align-items: center;
@@ -277,26 +309,34 @@
         transform: translateY(-2px);
     }
     .lecture-left iframe {
-      width: 180px;
-      height: 100px;
-      border-radius: var(--border-radius-md);
+      width: 160px;
+      height: 90px;
+      border-radius: var(--border-radius-sm);
       border: 1px solid var(--border-color);
     }
     .lecture-right {
       flex: 1;
-      margin-right: 16px;
+      margin-right: 12px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-    .lecture-title-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .lecture-title-header h4 { margin: 0; }
+    .lecture-title-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 8px; 
+    }
+    .lecture-title-header h4 { 
+        margin: 0; 
+        font-size: 0.95rem;
+    }
     .lecture-actions { display: flex; gap: 8px; }
     .lecture-actions button {
-        padding: 6px 12px;
-        border-radius: var(--border-radius-md);
+        padding: 5px 10px;
+        border-radius: var(--border-radius-sm);
         cursor: pointer;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 500;
         border: none;
         transition: all var(--transition-speed);
@@ -319,35 +359,54 @@
       border-radius: var(--border-radius-md);
       box-shadow: var(--shadow);
       align-items: center;
+      flex-shrink: 0; 
     }
-    .task-form input[type="text"] { flex: 1; }
-    .task-board { display: flex; gap: 24px; justify-content: space-between; }
+    .task-form input[type="text"] {
+        flex: 1 1 auto;
+        width: auto;
+    }
+    .task-form input[type="date"],
+    .task-form select,
+    .task-form button {
+        width: auto;
+        flex-shrink: 0;
+    }
+    
+    .task-board { 
+        display: flex; 
+        gap: 24px; 
+        justify-content: space-between; 
+        flex-grow: 1;
+        min-height: 0;
+    }
     .task-column {
       flex: 1;
       background: var(--surface-color);
       padding: 16px;
       border-radius: var(--border-radius-md);
       box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
     }
     .task-column h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px; }
-    .tasks-container { min-height: 200px; }
+    .tasks-container { min-height: 0; flex-grow: 1; overflow-y: auto; }
     .task-card {
       background: var(--primary-light);
-      padding: 12px; /* MODIFIED */
+      padding: 12px;
       border-radius: var(--border-radius-md);
       margin-bottom: 12px;
       box-shadow: none;
       border: 1px solid var(--border-color);
       border-left: 5px solid;
-      display: flex; /* MODIFIED */
-      justify-content: space-between; /* MODIFIED */
-      align-items: center; /* MODIFIED */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .task-card-content { flex-grow: 1; } /* NEW */
+    .task-card-content { flex-grow: 1; }
     .task-card.priority-high { border-left-color: #ef5350; }
     .task-card.priority-medium { border-left-color: #ffca28; }
     .task-card.priority-low { border-left-color: #66bb6a; }
-    .task-card p { margin: 0 0 4px; font-weight: 500; font-size: 0.95rem;} /* MODIFIED */
+    .task-card p { margin: 0 0 4px; font-weight: 500; font-size: 0.95rem;}
     .task-card .task-meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0; }
     .task-card.done { text-decoration: line-through; opacity: 0.7; background: #e8f5e9; }
 
@@ -356,6 +415,7 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        min-height: 0;
     }
     .note-toolbar {
         background: var(--surface-color);
@@ -365,6 +425,7 @@
         border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
         display: flex;
         gap: 4px;
+        align-items: center;
     }
     .note-toolbar button {
         padding: 6px 12px;
@@ -373,6 +434,15 @@
         background: transparent;
     }
     .note-toolbar button:hover { background: var(--primary-light); color: var(--primary-dark); }
+    .note-toolbar .remove-btn {
+        margin-left: auto;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+    .note-toolbar .remove-btn:hover {
+        background: #ffcdd2;
+        color: #c62828;
+    }
     #notes-editor {
         width: 100%;
         flex-grow: 1;
@@ -398,6 +468,10 @@
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 16px;
         margin-bottom: 24px;
+    }
+    #progress .progress-container {
+      height: 100%;
+      overflow-y: auto;
     }
     .summary-card {
         background-color: var(--surface-color);
@@ -456,75 +530,271 @@
     .subject-progress-item h4 {
         margin-bottom: 8px;
     }
+
+    /* --- DASHBOARD STYLES --- */
+    #dashboard .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+        flex-grow: 1;
+        min-height: 0;
+        overflow-y: auto;
+    }
+    .dashboard-main, .dashboard-side {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .dashboard-card {
+        background-color: var(--surface-color);
+        padding: 24px;
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow);
+    }
+    .dashboard-tasks .task-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .dashboard-tasks .task-item:last-child {
+        border-bottom: none;
+    }
+    .dashboard-tasks .task-name {
+        font-weight: 500;
+    }
+    .dashboard-tasks .task-due-date {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* --- QUIZZES TAB STYLES --- */
+    #flashcardForm {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        background: var(--primary-light);
+        border-radius: var(--border-radius-md);
+        margin-bottom: 24px;
+    }
+    .quiz-view {
+        perspective: 1000px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .flashcard {
+        width: 100%;
+        max-width: 500px;
+        height: 300px;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+    }
+    .flashcard.is-flipped {
+        transform: rotateY(180deg);
+    }
+    .flashcard-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        font-size: 1.5rem;
+        background: var(--surface-color);
+        box-shadow: var(--shadow-lg);
+        border-radius: var(--border-radius-md);
+        border: 1px solid var(--border-color);
+        text-align: center;
+    }
+    .flashcard-face--back {
+        transform: rotateY(180deg);
+        background: var(--primary-light);
+    }
+    .quiz-nav {
+        margin-top: 24px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+    #quizCardCounter {
+        font-weight: 500;
+        color: var(--text-muted);
+    }
+
+
+    /* --- POMODORO TIMER STYLES (MODIFIED) --- */
+    .pomodoro-timer {
+        padding: 12px;
+        text-align: center;
+        color: white;
+        margin-top: auto;
+        background: rgba(0,0,0,0.2);
+    }
+    .pomodoro-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    #pomodoro-display {
+        font-size: 2rem;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+    .pomodoro-modes {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .pomodoro-modes button {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255,255,255,0.5);
+        padding: 3px 8px;
+        border-radius: var(--border-radius-md);
+        font-size: 0.7rem;
+        margin: 0;
+        width: 100%;
+        text-align: center;
+        white-space: nowrap;
+    }
+    .pomodoro-modes button.active {
+        background: white;
+        color: var(--primary-dark);
+        font-weight: 600;
+        border-color: white;
+    }
+    .pomodoro-controls {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
+    .pomodoro-controls button {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255,255,255,0.7);
+        padding: 4px 12px;
+        border-radius: var(--border-radius-sm);
+        font-size: 0.8rem;
+        margin: 0;
+    }
+    .pomodoro-controls button:hover {
+        background: white;
+        color: var(--primary-dark);
+    }
+
   </style>
 </head>
 <body>
 
   <nav>
-    <h2>📚 Decode+</h2>
-    <button class="active" onclick="openTab(event, 'subjects')">📖 Subjects</button>
-    <button onclick="openTab(event, 'notes')">📔 Notes</button>
-    <button onclick="openTab(event, 'tasks')">📅 Tasks</button>
-    <button onclick="openTab(event, 'quizzes')">📝 Quizzes</button>
-    <button onclick="openTab(event, 'progress')">📊 Progress</button>
+    <div class="nav-buttons">
+        <h2>📚 Decode+</h2>
+        <button class="active" onclick="openTab(event, 'dashboard')">🏠 Dashboard</button>
+        <button onclick="openTab(event, 'subjects')">📖 Subjects</button>
+        <button onclick="openTab(event, 'notes')">📔 Notes</button>
+        <button onclick="openTab(event, 'tasks')">📅 Tasks</button>
+        <button onclick="openTab(event, 'quizzes')">📝 Quizzes</button>
+        <button onclick="openTab(event, 'progress')">📊 Progress</button>
+    </div>
+    <div class="pomodoro-timer">
+        <div class="pomodoro-top-row">
+            <div class="pomodoro-modes">
+                <button id="pomodoro-mode" class="active" onclick="setPomodoroMode('pomodoro')">Pomodoro</button>
+                <button id="short-break-mode" onclick="setPomodoroMode('shortBreak')">Short Break</button>
+                <button id="long-break-mode" onclick="setPomodoroMode('longBreak')">Long Break</button>
+            </div>
+            <div id="pomodoro-display">25:00</div>
+        </div>
+        <div class="pomodoro-controls">
+            <button id="pomodoro-start">Start</button>
+            <button id="pomodoro-reset">Reset</button>
+        </div>
+    </div>
   </nav>
 
   <div class="content">
-    <div id="subjects" class="tab active">
+    <div id="dashboard" class="tab active">
+        <!-- Content generated by renderDashboard() -->
+    </div>
+    <div id="subjects" class="tab">
       <h2>Subjects & Lectures</h2>
       <div class="subjects-container">
         <div class="subject-list">
           <input id="subjectName" type="text" placeholder="Add New Subject">
           <button class="primary-btn" onclick="addSubject()">+ Add Subject</button>
-          <hr>
-          <div id="subjectList"></div>
+          <div class="list-scroll-area">
+            <hr>
+            <div id="subjectList"></div>
+          </div>
         </div>
         <div class="lectures-area">
           <h3 id="subjectTitle">Select a subject to view lectures</h3>
-          <div id="lectureControls" style="display:none; gap: 10px; margin-bottom: 10px;">
+          <div id="lectureControls" style="display:none; gap: 10px; margin-bottom: 10px; flex-shrink: 0;">
             <input id="lectureUrl" type="text" placeholder="YouTube link" style="flex: 1;">
             <input id="lectureTitle" type="text" placeholder="Lecture title" style="flex: 1;">
             <button class="primary-btn" onclick="addLecture()">+ Add</button>
           </div>
-          <hr id="lectureHr" style="display: none;">
+          <hr id="lectureHr" style="display: none; flex-shrink: 0;">
           <div id="lectureList"></div>
         </div>
       </div>
     </div>
-
-    <div id="quizzes" class="tab"><h2>Quizzes</h2></div>
+    <div id="quizzes" class="tab">
+        <h2>Quizzes & Flashcards</h2>
+        <div class="quizzes-container">
+            <div class="quiz-subject-list">
+                <h3>Select a Subject</h3>
+                <div class="list-scroll-area">
+                    <div id="quizSubjectList"></div>
+                </div>
+            </div>
+            <div class="quizzes-area">
+                <h3 id="quizSubjectTitle">Select a subject to manage flashcards</h3>
+                <div id="quizContent" style="display: none; flex-grow: 1; min-height: 0; display: flex; flex-direction: column;">
+                    <!-- Quiz content will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="progress" class="tab">
         <!-- Content will be dynamically generated by renderProgress() -->
     </div>
-    
     <div id="notes" class="tab">
       <h2>My Notes</h2>
       <div class="notes-container">
         <div class="note-list">
           <input id="noteTitleInput" type="text" placeholder="New Note Title">
           <button class="primary-btn" onclick="addNote()">+ Add Note</button>
-          <hr>
-          <div id="notesList"></div>
+          <div class="list-scroll-area">
+            <hr>
+            <div id="notesList"></div>
+          </div>
         </div>
         <div class="note-editor-area">
           <h3 id="currentNoteTitle">Select a note to get started</h3>
           <div id="noteEditorContainer" style="display:none;">
-              <button class="remove-btn" style="float: right; margin-bottom: 10px; font-size: 0.9rem;" onclick="deleteCurrentNote()">Delete This Note</button>
-              
               <div class="note-toolbar">
                 <button title="Bold" onclick="formatDoc('bold')"><b>B</b></button>
                 <button title="Bulleted List" onclick="formatDoc('insertUnorderedList')">●</button>
                 <button title="Numbered List" onclick="formatDoc('insertOrderedList')">1.</button>
                 <button title="Highlight" onclick="formatDoc('backColor', '#FFFFA7')">🎨</button>
                 <button title="Remove Highlight" onclick="formatDoc('backColor', 'white')">🚫</button>
+                <button class="remove-btn" onclick="deleteCurrentNote()">Delete Note</button>
               </div>
-              
               <div id="notes-editor" contenteditable="true" oninput="handleNoteAutosave()"></div>
           </div>
         </div>
       </div>
     </div>
-    
     <div id="tasks" class="tab">
       <h2>Task Scheduler</h2>
       <div class="task-form">
@@ -562,9 +832,9 @@
       event.currentTarget.classList.add('active');
       document.getElementById(id).classList.add('active');
 
-      if (id === 'progress') {
-          renderProgress();
-      }
+      if (id === 'progress') renderProgress();
+      if (id === 'dashboard') renderDashboard();
+      if (id === 'quizzes') renderQuizUI();
     }
 
     // --- HELPER FUNCTIONS FOR ACTION MENUS ---
@@ -589,7 +859,10 @@
     function saveSubjects() { localStorage.setItem('lmsSubjects', JSON.stringify(subjects)); }
     function loadSubjects() {
         const stored = localStorage.getItem('lmsSubjects');
-        if (stored) subjects = JSON.parse(stored);
+        if (stored) {
+            subjects = JSON.parse(stored);
+            subjects.forEach(s => { if (!s.flashcards) s.flashcards = []; });
+        }
     }
     function saveNotes() { localStorage.setItem('lmsNotes', JSON.stringify(notes)); }
     function loadNotes() {
@@ -609,13 +882,14 @@
     function addSubject() {
       const name = document.getElementById('subjectName').value.trim();
       if (!name) return alert("Enter subject name");
-      subjects.push({ name, lectures: [] });
+      subjects.push({ name, lectures: [], flashcards: [] });
       document.getElementById('subjectName').value = "";
       saveSubjects();
       renderSubjects();
     }
     function renderSubjects() {
       const list = document.getElementById('subjectList');
+      if (!list) return;
       list.innerHTML = "";
       subjects.forEach((s, i) => {
         const div = document.createElement("div");
@@ -662,7 +936,7 @@
     }
     function deleteSubject(index, event) {
         event.stopPropagation();
-        if (confirm(`Are you sure you want to delete "${subjects[index].name}"? This will delete all its lectures.`)) {
+        if (confirm(`Are you sure you want to delete "${subjects[index].name}"? This will delete all its content.`)) {
             if (currentSubject === index) {
                 currentSubject = null;
                 document.getElementById('subjectTitle').innerText = "Select a subject";
@@ -932,7 +1206,7 @@
         if (!task) return;
 
         const newText = prompt("Enter new task description:", task.text);
-        if (newText === null) return; // User cancelled
+        if (newText === null) return; 
 
         const newDueDate = prompt("Enter new due date (YYYY-MM-DD):", task.dueDate);
         if (newDueDate === null) return;
@@ -1071,6 +1345,221 @@
             </div>
         `;
     }
+
+    // --- DASHBOARD SCRIPT ---
+    function renderDashboard() {
+        const dashboardTab = document.getElementById('dashboard');
+        
+        const today = new Date();
+        const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+        
+        const tasksDueSoon = tasks.filter(task => {
+            if (!task.dueDate) return false;
+            const dueDate = new Date(task.dueDate);
+            return dueDate >= today && dueDate <= nextWeek && task.status !== 'done';
+        }).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+        let tasksHTML = '<p>No tasks due in the next 7 days.</p>';
+        if (tasksDueSoon.length > 0) {
+            tasksHTML = tasksDueSoon.map(task => `
+                <div class="task-item">
+                    <span class="task-name">${task.text}</span>
+                    <span class="task-due-date">Due: ${task.dueDate}</span>
+                </div>
+            `).join('');
+        }
+        
+        const totalLectures = subjects.reduce((sum, subject) => sum + subject.lectures.length, 0);
+        const completedLectures = subjects.reduce((sum, subject) => sum + subject.lectures.filter(l => l.completed).length, 0);
+        const doneTasks = tasks.filter(t => t.status === 'done').length;
+
+        dashboardTab.innerHTML = `
+            <h2>Dashboard</h2>
+            <div class="dashboard-grid">
+                <div class="dashboard-main">
+                    <div class="dashboard-card dashboard-tasks">
+                        <h3>Tasks Due Soon (Next 7 Days)</h3>
+                        <div id="dashboardTaskList">${tasksHTML}</div>
+                    </div>
+                </div>
+                <div class="dashboard-side">
+                    <div class="dashboard-card">
+                        <h3>At a Glance</h3>
+                        <div class="progress-summary">
+                            <div class="summary-card">
+                                <div class="count">${subjects.length}</div>
+                                <div class="label">Subjects</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="count">${completedLectures}/${totalLectures}</div>
+                                <div class="label">Lectures Done</div>
+                            </div>
+                             <div class="summary-card">
+                                <div class="count">${doneTasks}</div>
+                                <div class="label">Tasks Done</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- QUIZ SCRIPT ---
+    let currentQuizSubject = null;
+    let currentQuizCardIndex = 0;
+    
+    function renderQuizUI() {
+        const list = document.getElementById('quizSubjectList');
+        list.innerHTML = '';
+        if (subjects.length === 0) {
+            list.innerHTML = '<p>No subjects created. Please add a subject first.</p>';
+            return;
+        }
+        subjects.forEach((s, i) => {
+            const div = document.createElement("div");
+            div.className = "quiz-subject-item" + (currentQuizSubject === i ? " active" : "");
+            div.innerHTML = `<span class="subject-name">${s.name}</span>`;
+            div.onclick = () => selectQuizSubject(i);
+            list.appendChild(div);
+        });
+    }
+
+    function selectQuizSubject(index) {
+        currentQuizSubject = index;
+        document.getElementById('quizSubjectTitle').innerText = subjects[index].name;
+        document.getElementById('quizContent').style.display = 'flex';
+        renderQuizSubjectView();
+        renderQuizUI(); // To update active state
+    }
+
+    function renderQuizSubjectView() {
+        const contentArea = document.getElementById('quizContent');
+        const subject = subjects[currentQuizSubject];
+        const hasFlashcards = subject.flashcards && subject.flashcards.length > 0;
+
+        contentArea.innerHTML = `
+            <form id="flashcardForm" onsubmit="addFlashcard(event)">
+                <h4>Add a New Flashcard</h4>
+                <textarea id="flashcardFront" placeholder="Front of the card (Question/Term)" required></textarea>
+                <textarea id="flashcardBack" placeholder="Back of the card (Answer/Definition)" required></textarea>
+                <button type="submit" class="primary-btn" style="align-self: flex-start;">+ Add Card</button>
+            </form>
+            <hr>
+            <h4>Existing Flashcards (${subject.flashcards.length})</h4>
+            ${hasFlashcards ? `<button class="primary-btn" style="align-self: flex-start; margin-bottom: 16px;" onclick="startQuiz()">Start Quiz</button>` : '<p>No flashcards yet. Add one above to start a quiz!</p>'}
+        `;
+    }
+
+    function addFlashcard(event) {
+        event.preventDefault();
+        const front = document.getElementById('flashcardFront').value;
+        const back = document.getElementById('flashcardBack').value;
+        
+        const subject = subjects[currentQuizSubject];
+        subject.flashcards.push({ front, back });
+        saveSubjects();
+        renderQuizSubjectView(); // Refresh the view
+    }
+    
+    function startQuiz() {
+        currentQuizCardIndex = 0;
+        renderQuizCard();
+    }
+    
+    function renderQuizCard() {
+        const contentArea = document.getElementById('quizContent');
+        const flashcards = subjects[currentQuizSubject].flashcards;
+        const card = flashcards[currentQuizCardIndex];
+        
+        contentArea.innerHTML = `
+            <div class="quiz-view">
+                <div class="flashcard" onclick="this.classList.toggle('is-flipped')">
+                    <div class="flashcard-face flashcard-face--front">${card.front}</div>
+                    <div class="flashcard-face flashcard-face--back">${card.back}</div>
+                </div>
+                <div class="quiz-nav">
+                    <button class="primary-btn" onclick="prevCard()">Previous</button>
+                    <span id="quizCardCounter">${currentQuizCardIndex + 1} / ${flashcards.length}</span>
+                    <button class="primary-btn" onclick="nextCard()">Next</button>
+                </div>
+                <button class="primary-btn" style="margin-top: 24px;" onclick="renderQuizSubjectView()">End Quiz</button>
+            </div>
+        `;
+    }
+
+    function nextCard() {
+        const flashcards = subjects[currentQuizSubject].flashcards;
+        if (currentQuizCardIndex < flashcards.length - 1) {
+            currentQuizCardIndex++;
+            renderQuizCard();
+        }
+    }
+    function prevCard() {
+        if (currentQuizCardIndex > 0) {
+            currentQuizCardIndex--;
+            renderQuizCard();
+        }
+    }
+
+
+    // --- POMODORO TIMER SCRIPT ---
+    const pomodoroDisplay = document.getElementById('pomodoro-display');
+    const pomodoroStartBtn = document.getElementById('pomodoro-start');
+    const pomodoroResetBtn = document.getElementById('pomodoro-reset');
+    const modeButtons = document.querySelectorAll('.pomodoro-modes button');
+    
+    let pomodoroInterval;
+    let pomodoroTime = 1500; // 25 minutes in seconds
+    let currentMode = 'pomodoro';
+    
+    const modes = {
+        pomodoro: 1500,
+        shortBreak: 300,
+        longBreak: 900,
+    };
+
+    function updatePomodoroDisplay() {
+        const minutes = Math.floor(pomodoroTime / 60);
+        const seconds = pomodoroTime % 60;
+        pomodoroDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    function setPomodoroMode(mode) {
+        currentMode = mode;
+        resetPomodoro();
+        modeButtons.forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`${mode}-mode`).classList.add('active');
+    }
+
+    function startPomodoro() {
+        if (pomodoroStartBtn.textContent === 'Start') {
+            pomodoroStartBtn.textContent = 'Pause';
+            pomodoroInterval = setInterval(() => {
+                pomodoroTime--;
+                updatePomodoroDisplay();
+                if (pomodoroTime <= 0) {
+                    clearInterval(pomodoroInterval);
+                    alert("Time's up!");
+                    resetPomodoro();
+                }
+            }, 1000);
+        } else {
+            pomodoroStartBtn.textContent = 'Start';
+            clearInterval(pomodoroInterval);
+        }
+    }
+    
+    function resetPomodoro() {
+        clearInterval(pomodoroInterval);
+        pomodoroStartBtn.textContent = 'Start';
+        pomodoroTime = modes[currentMode];
+        updatePomodoroDisplay();
+    }
+
+    pomodoroStartBtn.addEventListener('click', startPomodoro);
+    pomodoroResetBtn.addEventListener('click', resetPomodoro);
+    
     
     // --- INITIAL APP RENDER ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -1085,11 +1574,14 @@
                 { id: 3, text: "Submit Math assignment", dueDate: "2025-09-11", priority: "high", status: "done" }
             ];
         }
-
+        
         renderSubjects();
         renderNotesList();
         renderTasks();
+        renderDashboard(); 
         renderProgress();
+        renderQuizUI();
+        updatePomodoroDisplay();
     });
 
   </script>
