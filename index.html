@@ -42,7 +42,7 @@
         font-weight: 400;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        overflow: hidden; 
+        /* overflow: hidden;  <-- THIS LINE WAS THE PROBLEM AND HAS BEEN REMOVED */
     }
 
     h2, h3, h4 {
@@ -116,6 +116,7 @@
         flex: 1;
         padding: 32px;
         overflow: hidden;
+        min-height: 0; /* Added for flexbox stability */
     }
     .tab {
         display: none;
@@ -854,8 +855,7 @@
   </style>
 </head>
 <body>
-
-  <nav>
+<nav>
     <div class="nav-buttons">
         <h2>📚 Decode+</h2>
         <button class="active" onclick="openTab(event, 'dashboard')">🏠 Dashboard</button>
