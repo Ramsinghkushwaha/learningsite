@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Decode+</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -35,14 +34,18 @@
     body {
         margin: 0;
         font-family: var(--font-family);
-        display: flex;
-        height: 100vh;
         background: var(--background-color);
         color: var(--text-color);
         font-weight: 400;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        /* overflow: hidden;  <-- THIS LINE WAS THE PROBLEM AND HAS BEEN REMOVED */
+    }
+
+    /* ADDED: Main wrapper to preserve layout and allow for footer */
+    .main-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
 
     h2, h3, h4 {
@@ -66,29 +69,39 @@
     ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #bbb; }
 
-    /* --- Sidebar Navigation --- */
+    /* --- Top Navigation --- */
     nav {
-        width: 240px;
+        width: 100%; 
         background: var(--primary-dark);
         color: white;
         display: flex;
-        flex-direction: column;
+        flex-direction: row; 
+        align-items: center; 
+        justify-content: space-between; 
+        padding: 0 24px; 
         flex-shrink: 0;
         box-shadow: var(--shadow-lg);
         z-index: 100;
+        position: sticky; /* ADDED: Makes the nav bar stick */
+        top: 0; /* ADDED: Sticks to the very top */
     }
-    .nav-buttons { flex-grow: 1; }
+    .nav-buttons { 
+        flex-grow: 1; 
+        display: flex; 
+        align-items: center;
+    }
     nav h2 {
         text-align: center;
         margin: 0;
-        padding: 24px 16px;
-        background: rgba(0,0,0,0.2);
+        padding: 16px 0; 
+        background: transparent; 
         font-size: 1.5rem;
         font-weight: 600;
         color: white;
+        margin-right: 24px; 
     }
     nav button {
-        padding: 16px 24px;
+        padding: 20px 16px; 
         border: none;
         background: transparent;
         color: rgba(255, 255, 255, 0.8);
@@ -97,8 +110,8 @@
         font-family: var(--font-family);
         cursor: pointer;
         transition: all var(--transition-speed);
-        border-left: 4px solid transparent;
-        width: 100%;
+        border-bottom: 4px solid transparent; 
+        width: auto; 
     }
     nav button:hover {
         background: rgba(255,255,255,0.05);
@@ -108,7 +121,8 @@
         background: var(--primary-color);
         color: white;
         font-weight: 600;
-        border-left: 4px solid white;
+        border-bottom: 4px solid white; 
+        border-left: none; 
     }
 
     /* --- Content Area --- */
@@ -116,7 +130,7 @@
         flex: 1;
         padding: 32px;
         overflow: hidden;
-        min-height: 0; /* Added for flexbox stability */
+        min-height: 0; 
     }
     .tab {
         display: none;
@@ -290,6 +304,11 @@
     }
     .actions-menu-item:hover { background-color: var(--primary-light); }
     .actions-menu-item.disabled { color: #aaa; cursor: not-allowed; background-color: transparent; }
+    .actions-menu-item.active { /* ADDED: For active timer mode */
+        background-color: var(--primary-light);
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
 
     /* --- Lecture Card --- */
     #lectureControls { align-items: center; }
@@ -393,16 +412,16 @@
     .task-column h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px; }
     .tasks-container { min-height: 0; flex-grow: 1; overflow-y: auto; }
     .task-card {
-      background: var(--primary-light);
-      padding: 12px;
-      border-radius: var(--border-radius-md);
-      margin-bottom: 12px;
-      box-shadow: none;
-      border: 1px solid var(--border-color);
-      border-left: 5px solid;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+        background: var(--primary-light);
+        padding: 12px;
+        border-radius: var(--border-radius-md);
+        margin-bottom: 12px;
+        box-shadow: none;
+        border: 1px solid var(--border-color);
+        border-left: 5px solid;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     .task-card-content { flex-grow: 1; }
     .task-card.priority-high { border-left-color: #ef5350; }
@@ -720,266 +739,168 @@
 
     /* --- POMODORO TIMER STYLES (MODIFIED) --- */
     .pomodoro-timer {
-        padding: 16px 12px;
-        text-align: center;
+        display: flex; 
+        align-items: center; 
+        gap: 8px; /* Space between time and menu button */
         color: white;
-        margin-top: auto;
-        background: rgba(0,0,0,0.2);
     }
-    .pomodoro-top-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 12px;
+    .pomodoro-timer .actions-menu-btn { /* Style for the new dots button */
+        color: white;
     }
+    .pomodoro-timer .actions-menu-btn:hover {
+        background-color: rgba(255,255,255,0.2);
+    }
+    
     #pomodoro-display {
         font-size: 1.8rem;
         font-weight: 600;
         flex-shrink: 0;
-        margin-left: 12px;
     }
-    .pomodoro-modes {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        align-items: flex-start;
-    }
-    .pomodoro-modes button {
-        background: transparent;
-        color: white;
-        border: 1px solid rgba(255,255,255,0.5);
-        padding: 3px 8px;
-        border-radius: var(--border-radius-md);
-        font-size: 0.7rem;
-        margin: 0;
-        width: auto;
+
+    /* ADDED: Footer Styles */
+    footer {
+        padding: 24px;
+        background-color: var(--surface-color);
         text-align: center;
-        white-space: nowrap;
-    }
-    .pomodoro-modes button.active {
-        background: white;
-        color: var(--primary-dark);
-        font-weight: 600;
-        border-color: white;
-    }
-    .pomodoro-controls {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-    }
-    .pomodoro-controls button {
-        background: transparent;
-        color: white;
-        border: 1px solid rgba(255,255,255,0.7);
-        padding: 4px 12px;
-        border-radius: var(--border-radius-sm);
-        font-size: 0.8rem;
-        margin: 0;
-    }
-    .pomodoro-controls button:hover {
-        background: white;
-        color: var(--primary-dark);
-    }
-
-    /* --- SMARTPHONE FRIENDLY STYLES --- */
-    @media (max-width: 768px) {
-        /* --- Base layout and font adjustments --- */
-        html {
-            font-size: 14px;
-        }
-        
-        body {
-            flex-direction: column-reverse;
-        }
-
-        /* --- Bottom Navigation Bar --- */
-        nav {
-            width: 100%;
-            height: 60px;
-            flex-direction: row;
-            flex-shrink: 0;
-            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.1);
-        }
-
-        nav h2 {
-            display: none;
-        }
-
-        .nav-buttons {
-            display: flex; 
-            flex-direction: row; 
-            justify-content: space-around;
-            align-items: stretch;
-            width: 100%;
-        }
-
-        nav button {
-            flex-grow: 1;
-            padding: 8px 4px;
-            font-size: 0.8rem; 
-            border-left: none;
-            border-bottom: 4px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            border-radius: 0;
-        }
-        
-        nav button.active {
-            border-left: none;
-            border-bottom: 4px solid white;
-        }
-        
-        .pomodoro-timer {
-            display: none;
-        }
-
-        /* --- Content and Page Layout Adjustments --- */
-        .content {
-            padding: 16px;
-            overflow-y: auto;
-        }
-
-        .tab {
-            height: auto;
-        }
-        
-        /* NEW: Reduce width of side panels on mobile to give more space to content */
-        .subject-list, .note-list, .quiz-subject-list {
-            width: 150px; /* Reduced from 280px for mobile */
-            flex-shrink: 0; /* Prevent the panel from shrinking further */
-        }
+        color: var(--text-muted);
+        border-top: 1px solid var(--border-color);
+        font-size: 0.9rem;
     }
 
   </style>
 </head>
 <body>
-<nav>
-    <div class="nav-buttons">
-        <h2>📚 Decode+</h2>
-        <button class="active" onclick="openTab(event, 'dashboard')">🏠 Dashboard</button>
-        <button onclick="openTab(event, 'subjects')">📖 Subjects</button>
-        <button onclick="openTab(event, 'notes')">📔 Notes</button>
-        <button onclick="openTab(event, 'tasks')">📅 Tasks</button>
-        <button onclick="openTab(event, 'quizzes')">📝 Quizzes</button>
-        <button onclick="openTab(event, 'progress')">📊 Progress</button>
-    </div>
-    <div class="pomodoro-timer">
-        <div class="pomodoro-top-row">
-            <div class="pomodoro-modes">
-                <button id="pomodoro-mode" class="active" onclick="setPomodoroMode('pomodoro')">Pomodoro</button>
-                <button id="short-break-mode" onclick="setPomodoroMode('shortBreak')">Short Break</button>
-                <button id="long-break-mode" onclick="setPomodoroMode('longBreak')">Long Break</button>
-            </div>
-            <div id="pomodoro-display">25:00</div>
-        </div>
-        <div class="pomodoro-controls">
-            <button id="pomodoro-start">Start</button>
-            <button id="pomodoro-reset">Reset</button>
-        </div>
-    </div>
-  </nav>
 
-  <div class="content">
-    <div id="dashboard" class="tab active">
-        </div>
-    <div id="subjects" class="tab">
-      <h2>Subjects & Lectures</h2>
-      <div class="subjects-container">
-        <div class="subject-list">
-          <input id="subjectName" type="text" placeholder="Add New Subject">
-          <button class="primary-btn" onclick="addSubject()">+ Add Subject</button>
-          <div class="list-scroll-area">
-            <hr>
-            <div id="subjectList"></div>
+  <div class="main-wrapper">
+    <nav>
+      <div class="nav-buttons">
+          <h2>📚 Decode+</h2>
+          <button class="active" onclick="openTab(event, 'dashboard')">🏠 Dashboard</button>
+          <button onclick="openTab(event, 'subjects')">📖 Subjects</button>
+          <button onclick="openTab(event, 'notes')">📔 Notes</button>
+          <button onclick="openTab(event, 'tasks')">📅 Tasks</button>
+          <button onclick="openTab(event, 'quizzes')">📝 Quizzes</button>
+          <button onclick="openTab(event, 'progress')">📊 Progress</button>
+      </div>
+      <div class="pomodoro-timer">
+          <div id="pomodoro-display">25:00</div>
+          <div class="actions-container">
+              <button class="actions-menu-btn" onclick="toggleActionMenu(event)">⋮</button>
+              <div class="actions-menu">
+                  <button class="actions-menu-item" id="pomodoro-start">Start</button>
+                  <button class="actions-menu-item" id="pomodoro-reset">Reset</button>
+                  <hr style="margin: 4px 0;">
+                  <button class="actions-menu-item" id="pomodoro-mode" onclick="setPomodoroMode('pomodoro')">Pomodoro</button>
+                  <button class="actions-menu-item" id="short-break-mode" onclick="setPomodoroMode('shortBreak')">Short Break</button>
+                  <button class="actions-menu-item" id="long-break-mode" onclick="setPomodoroMode('longBreak')">Long Break</button>
+              </div>
           </div>
-        </div>
-        <div class="lectures-area">
-          <h3 id="subjectTitle">Select a subject to view lectures</h3>
-          <div id="lectureControls" style="display:none; gap: 10px; margin-bottom: 10px; flex-shrink: 0;">
-            <input id="lectureUrl" type="text" placeholder="YouTube link" style="flex: 1;">
-            <input id="lectureTitle" type="text" placeholder="Lecture title" style="flex: 1;">
-            <button class="primary-btn" onclick="addLecture()">+ Add</button>
+      </div>
+    </nav>
+
+    <div class="content">
+      <div id="dashboard" class="tab active">
           </div>
-          <hr id="lectureHr" style="display: none; flex-shrink: 0;">
-          <div id="lectureList"></div>
+      <div id="subjects" class="tab">
+        <h2>Subjects & Lectures</h2>
+        <div class="subjects-container">
+          <div class="subject-list">
+            <input id="subjectName" type="text" placeholder="Add New Subject">
+            <button class="primary-btn" onclick="addSubject()">+ Add Subject</button>
+            <div class="list-scroll-area">
+              <hr>
+              <div id="subjectList"></div>
+            </div>
+          </div>
+          <div class="lectures-area">
+            <h3 id="subjectTitle">Select a subject to view lectures</h3>
+            <div id="lectureControls" style="display:none; gap: 10px; margin-bottom: 10px; flex-shrink: 0;">
+              <input id="lectureUrl" type="text" placeholder="YouTube link" style="flex: 1;">
+              <input id="lectureTitle" type="text" placeholder="Lecture title" style="flex: 1;">
+              <button class="primary-btn" onclick="addLecture()">+ Add</button>
+            </div>
+            <hr id="lectureHr" style="display: none; flex-shrink: 0;">
+            <div id="lectureList"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div id="quizzes" class="tab">
-        <h2>Quizzes & Flashcards</h2>
-        <div class="quizzes-container">
-            <div class="quiz-subject-list">
-                <h3>Select a Subject</h3>
-                <div class="list-scroll-area">
-                    <div id="quizSubjectList"></div>
-                </div>
-            </div>
-            <div class="quizzes-area">
-                <h3 id="quizSubjectTitle">Select a subject to manage flashcards</h3>
-                <div id="quizContent" style="display: none; flex-grow: 1; min-height: 0; display: flex; flex-direction: column;">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="progress" class="tab">
-        </div>
-    <div id="notes" class="tab">
-      <h2>My Notes</h2>
-      <div class="notes-container">
-        <div class="note-list">
-          <input id="noteTitleInput" type="text" placeholder="New Note Title">
-          <button class="primary-btn" onclick="addNote()">+ Add Note</button>
-          <div class="list-scroll-area">
-            <hr>
-            <div id="notesList"></div>
+      <div id="quizzes" class="tab">
+          <h2>Quizzes & Flashcards</h2>
+          <div class="quizzes-container">
+              <div class="quiz-subject-list">
+                  <h3>Select a Subject</h3>
+                  <div class="list-scroll-area">
+                      <div id="quizSubjectList"></div>
+                  </div>
+              </div>
+              <div class="quizzes-area">
+                  <h3 id="quizSubjectTitle">Select a subject to manage flashcards</h3>
+                  <div id="quizContent" style="display: none; flex-grow: 1; min-height: 0; display: flex; flex-direction: column;">
+                      </div>
+              </div>
           </div>
-        </div>
-        <div class="note-editor-area">
-          <h3 id="currentNoteTitle">Select a note to get started</h3>
-          <div id="noteEditorContainer" style="display:none;">
-              <div class="note-toolbar">
+      </div>
+      <div id="progress" class="tab">
+          </div>
+      <div id="notes" class="tab">
+        <h2>My Notes</h2>
+        <div class="notes-container">
+          <div class="note-list">
+            <input id="noteTitleInput" type="text" placeholder="New Note Title">
+            <button class="primary-btn" onclick="addNote()">+ Add Note</button>
+            <div class="list-scroll-area">
+              <hr>
+              <div id="notesList"></div>
+            </div>
+          </div>
+          <div class="note-editor-area">
+            <h3 id="currentNoteTitle">Select a note to get started</h3>
+            <div id="noteEditorContainer" style="display:none;">
+                <div class="note-toolbar">
                   <button title="Bold" onclick="formatDoc('bold')"><b>B</b></button>
                   <button title="Bulleted List" onclick="formatDoc('insertUnorderedList')">●</button>
                   <button title="Numbered List" onclick="formatDoc('insertOrderedList')">1.</button>
                   <button title="Highlight" onclick="formatDoc('backColor', '#FFFFA7')">🎨</button>
                   <button title="Remove Highlight" onclick="formatDoc('backColor', 'white')">🚫</button>
                   <button class="remove-btn" onclick="deleteCurrentNote()">Delete Note</button>
-              </div>
-              <div id="notes-editor" contenteditable="true" oninput="handleNoteAutosave()"></div>
+                </div>
+                <div id="notes-editor" contenteditable="true" oninput="handleNoteAutosave()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="tasks" class="tab">
+        <h2>Task Scheduler</h2>
+        <div class="task-form">
+          <input type="text" id="taskInput" placeholder="New task description...">
+          <input type="date" id="taskDueDate">
+          <select id="taskPriority">
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+          <button class="primary-btn" onclick="addTask()">+ Add Task</button>
+        </div>
+        <div class="task-board">
+          <div class="task-column">
+            <h3>To Do</h3>
+            <div class="tasks-container" id="todo-tasks"></div>
+          </div>
+          <div class="task-column">
+            <h3>In Progress</h3>
+            <div class="tasks-container" id="inprogress-tasks"></div>
+          </div>
+          <div class="task-column">
+            <h3>Done</h3>
+            <div class="tasks-container" id="done-tasks"></div>
           </div>
         </div>
       </div>
     </div>
-    <div id="tasks" class="tab">
-      <h2>Task Scheduler</h2>
-      <div class="task-form">
-        <input type="text" id="taskInput" placeholder="New task description...">
-        <input type="date" id="taskDueDate">
-        <select id="taskPriority">
-          <option value="low">Low Priority</option>
-          <option value="medium">Medium Priority</option>
-          <option value="high">High Priority</option>
-        </select>
-        <button class="primary-btn" onclick="addTask()">+ Add Task</button>
-      </div>
-      <div class="task-board">
-        <div class="task-column">
-          <h3>To Do</h3>
-          <div class="tasks-container" id="todo-tasks"></div>
-        </div>
-        <div class="task-column">
-          <h3>In Progress</h3>
-          <div class="tasks-container" id="inprogress-tasks"></div>
-        </div>
-        <div class="task-column">
-          <h3>Done</h3>
-          <div class="tasks-container" id="done-tasks"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </div><footer>
+      <p>&copy; 2025 Decode+. All rights reserved.</p>
+  </footer>
+
 
   <script>
     // Tab navigation
@@ -1485,11 +1406,11 @@
                         <div class="count">${todoTasks}</div>
                         <div class="label">To Do</div>
                     </div>
-                    <div class="summary-card">
+                   <div class="summary-card">
                         <div class="count">${inprogressTasks}</div>
                         <div class="label">In Progress</div>
                     </div>
-                    <div class="summary-card">
+                   <div class="summary-card">
                         <div class="count">${doneTasks}</div>
                         <div class="label">Done</div>
                     </div>
@@ -1664,7 +1585,6 @@
     const pomodoroDisplay = document.getElementById('pomodoro-display');
     const pomodoroStartBtn = document.getElementById('pomodoro-start');
     const pomodoroResetBtn = document.getElementById('pomodoro-reset');
-    const modeButtons = document.querySelectorAll('.pomodoro-modes button');
     
     let pomodoroInterval;
     let pomodoroTime = 1500; // 25 minutes in seconds
@@ -1685,7 +1605,7 @@
     function setPomodoroMode(mode) {
         currentMode = mode;
         resetPomodoro();
-        modeButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.pomodoro-timer .actions-menu-item').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`${mode}-mode`).classList.add('active');
     }
 
@@ -1726,9 +1646,9 @@
 
         if (tasks.length === 0) {
             tasks = [
-                { id: 1, text: "Finish project proposal", dueDate: "2025-09-13", priority: "high", status: "todo" },
-                { id: 2, text: "Read Chapter 4 of Physics", dueDate: "2025-09-14", priority: "medium", status: "inprogress" },
-                { id: 3, text: "Submit Math assignment", dueDate: "2025-09-11", priority: "high", status: "done" }
+                { id: 1, text: "Finish project proposal", dueDate: "2025-09-15", priority: "high", status: "todo" },
+                { id: 2, text: "Read Chapter 4 of Physics", dueDate: "2025-09-16", priority: "medium", status: "inprogress" },
+                { id: 3, text: "Submit Math assignment", dueDate: "2025-09-13", priority: "high", status: "done" }
             ];
         }
         
@@ -1738,6 +1658,7 @@
         renderDashboard(); 
         renderProgress();
         renderQuizUI();
+        setPomodoroMode('pomodoro'); // Set initial active state
         updatePomodoroDisplay();
     });
 
