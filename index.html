@@ -41,7 +41,6 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ADDED: Main wrapper to preserve layout and allow for footer */
     .main-wrapper {
         display: flex;
         flex-direction: column;
@@ -82,8 +81,8 @@
         flex-shrink: 0;
         box-shadow: var(--shadow-lg);
         z-index: 100;
-        position: sticky; /* ADDED: Makes the nav bar stick */
-        top: 0; /* ADDED: Sticks to the very top */
+        position: sticky; 
+        top: 0; 
     }
     .nav-buttons { 
         flex-grow: 1; 
@@ -123,6 +122,10 @@
         font-weight: 600;
         border-bottom: 4px solid white; 
         border-left: none; 
+    }
+    /* ADDED: Styles for icon and text spans inside buttons */
+    .nav-buttons button .icon {
+        margin-right: 8px;
     }
 
     /* --- Content Area --- */
@@ -304,7 +307,7 @@
     }
     .actions-menu-item:hover { background-color: var(--primary-light); }
     .actions-menu-item.disabled { color: #aaa; cursor: not-allowed; background-color: transparent; }
-    .actions-menu-item.active { /* ADDED: For active timer mode */
+    .actions-menu-item.active {
         background-color: var(--primary-light);
         font-weight: 600;
         color: var(--primary-dark);
@@ -741,10 +744,10 @@
     .pomodoro-timer {
         display: flex; 
         align-items: center; 
-        gap: 8px; /* Space between time and menu button */
+        gap: 8px; 
         color: white;
     }
-    .pomodoro-timer .actions-menu-btn { /* Style for the new dots button */
+    .pomodoro-timer .actions-menu-btn { 
         color: white;
     }
     .pomodoro-timer .actions-menu-btn:hover {
@@ -757,7 +760,7 @@
         flex-shrink: 0;
     }
 
-    /* ADDED: Footer Styles */
+    /* --- Footer Styles --- */
     footer {
         padding: 24px;
         background-color: var(--surface-color);
@@ -765,6 +768,25 @@
         color: var(--text-muted);
         border-top: 1px solid var(--border-color);
         font-size: 0.9rem;
+    }
+
+    /* ADDED: Media Query for Mobile Responsive Menu */
+    @media (max-width: 768px) {
+        nav {
+            padding: 0 16px;
+        }
+        nav h2 {
+            display: none; /* Hide title on small screens */
+        }
+        .nav-buttons button .text {
+            display: none; /* Hide text, show only icon */
+        }
+        .nav-buttons button .icon {
+            margin-right: 0; /* Remove margin when text is hidden */
+        }
+        .nav-buttons button {
+            padding: 20px 12px;
+        }
     }
 
   </style>
@@ -775,12 +797,12 @@
     <nav>
       <div class="nav-buttons">
           <h2>📚 Decode+</h2>
-          <button class="active" onclick="openTab(event, 'dashboard')">🏠 Dashboard</button>
-          <button onclick="openTab(event, 'subjects')">📖 Subjects</button>
-          <button onclick="openTab(event, 'notes')">📔 Notes</button>
-          <button onclick="openTab(event, 'tasks')">📅 Tasks</button>
-          <button onclick="openTab(event, 'quizzes')">📝 Quizzes</button>
-          <button onclick="openTab(event, 'progress')">📊 Progress</button>
+          <button class="active" onclick="openTab(event, 'dashboard')"><span class="icon">🏠</span><span class="text"> Dashboard</span></button>
+          <button onclick="openTab(event, 'subjects')"><span class="icon">📖</span><span class="text"> Subjects</span></button>
+          <button onclick="openTab(event, 'notes')"><span class="icon">📔</span><span class="text"> Notes</span></button>
+          <button onclick="openTab(event, 'tasks')"><span class="icon">📅</span><span class="text"> Tasks</span></button>
+          <button onclick="openTab(event, 'quizzes')"><span class="icon">📝</span><span class="text"> Quizzes</span></button>
+          <button onclick="openTab(event, 'progress')"><span class="icon">📊</span><span class="text"> Progress</span></button>
       </div>
       <div class="pomodoro-timer">
           <div id="pomodoro-display">25:00</div>
@@ -905,7 +927,7 @@
   <script>
     // Tab navigation
     function openTab(event, id) {
-      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('nav .nav-buttons button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       event.currentTarget.classList.add('active');
       document.getElementById(id).classList.add('active');
