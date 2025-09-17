@@ -1027,52 +1027,56 @@
 
     async function saveDataToDrive() {
         if (!gapi.client.getToken()) return alert("Please log in before saving.");
-        saveButton.disabled = true; 
-        saveButton.innerText = 'Saving...';
+        saveButton.disabled = true; saveButton.innerText = 'Saving...';
         
         const allData = { subjects, notes, tasks };
-        const fileContent = JSON.stringify(allData, null, 2);
-        
-        // This is a special object for holding file content
-        const media = {
-            mimeType: 'application/json',
-            body: fileContent
-        };
+        // Create a Blob object which is the modern way to handle file-like data
+        const fileContentBlob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
 
         try {
-            if (!appDataFileId) {
-                appDataFileId = await findFileId();
-            }
+            if (!appDataFileId) appDataFileId = await findFileId();
+            
+            const metadata = {
+                name: APP_DATA_FILE_NAME,
+                mimeType: 'application/json',
+            };
+
+            const form = new FormData();
 
             if (appDataFileId) {
-                // If file exists, UPDATE it
-                await gapi.client.drive.files.update({
-                    fileId: appDataFileId,
-                    media: media
-                });
+                // If the file exists, we update its metadata and content
+                form.append('metadata', new Blob([JSON.stringify({ name: metadata.name, mimeType: metadata.mimeType })], { type: 'application/json' }));
+                form.append('file', fileContentBlob);
 
-            } else {
-                // If file does NOT exist, CREATE it
-                const metadata = {
-                    name: APP_DATA_FILE_NAME,
-                    mimeType: 'application/json'
-                };
+                await gapi.client.request({
+                    path: `/upload/drive/v3/files/${appDataFileId}`,
+                    method: 'PATCH',
+                    params: { uploadType: 'multipart' },
+                    headers: { 'Content-Type': `multipart/related; boundary=${form._boundary}` },
+                    body: form,
+                });
                 
-                const response = await gapi.client.drive.files.create({
-                    resource: metadata,
-                    media: media,
-                    fields: 'id'
+            } else {
+                // If the file does not exist, we create a new one
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', fileContentBlob);
+
+                const response = await gapi.client.request({
+                    path: '/upload/drive/v3/files',
+                    method: 'POST',
+                    params: { uploadType: 'multipart' },
+                    headers: { 'Content-Type': `multipart/related; boundary=${form._boundary}` },
+                    body: form,
                 });
                 appDataFileId = response.result.id;
             }
 
             alert('Data saved to Google Drive!');
         } catch (error) {
-            alert('Error saving data. Please check the console for details.');
+            alert('Error saving data. See console for details.');
             console.error('Save Error:', error);
         } finally {
-            saveButton.disabled = false; 
-            saveButton.innerText = '☁️ Save to Cloud';
+            saveButton.disabled = false; saveButton.innerText = '☁️ Save to Cloud';
         }
     }
 
