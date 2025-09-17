@@ -947,7 +947,7 @@
 
   <script>
     // --- 1. GOOGLE DRIVE API SETUP ---
-    const CLIENT_ID = '938237083591-f237ct41avtntpk32lmvst40cdlsfebi.apps.googleusercontent.com';
+    const CLIENT_ID = '101264539435-15mmlmpd7uag8u8047m62e9d3csl1ah1.apps.googleusercontent.com';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
     const APP_DATA_FILE_NAME = 'decodePlusData.json';
 
@@ -1030,28 +1030,47 @@
         saveButton.disabled = true; saveButton.innerText = 'Saving...';
         
         const allData = { subjects, notes, tasks };
-        const fileContent = JSON.stringify(allData, null, 2);
+        // Create a Blob object which is the modern way to handle file-like data
+        const fileContentBlob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
 
         try {
             if (!appDataFileId) appDataFileId = await findFileId();
             
-            const boundary = '-------314159265358979323846';
-            const delimiter = `\r\n--${boundary}\r\n`;
-            const close_delim = `\r\n--${boundary}--`;
+            const metadata = {
+                name: APP_DATA_FILE_NAME,
+                mimeType: 'application/json',
+            };
 
-            const metadata = { name: APP_DATA_FILE_NAME, mimeType: 'application/json' };
-            const multipartRequestBody = delimiter + 'Content-Type: application/json\r\n\r\n' + JSON.stringify(metadata) + delimiter + 'Content-Type: application/json\r\n\r\n' + fileContent + close_delim;
+            const form = new FormData();
 
-            const request = gapi.client.request({
-                path: `/upload/drive/v3/files/${appDataFileId || ''}`,
-                method: appDataFileId ? 'PATCH' : 'POST',
-                params: { uploadType: 'multipart' },
-                headers: { 'Content-Type': `multipart/related; boundary="${boundary}"` },
-                body: multipartRequestBody
-            });
+            if (appDataFileId) {
+                // If the file exists, we update its metadata and content
+                form.append('metadata', new Blob([JSON.stringify({ name: metadata.name, mimeType: metadata.mimeType })], { type: 'application/json' }));
+                form.append('file', fileContentBlob);
 
-            const response = await request;
-            appDataFileId = response.result.id;
+                await gapi.client.request({
+                    path: `/upload/drive/v3/files/${appDataFileId}`,
+                    method: 'PATCH',
+                    params: { uploadType: 'multipart' },
+                    headers: { 'Content-Type': `multipart/related; boundary=${form._boundary}` },
+                    body: form,
+                });
+                
+            } else {
+                // If the file does not exist, we create a new one
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', fileContentBlob);
+
+                const response = await gapi.client.request({
+                    path: '/upload/drive/v3/files',
+                    method: 'POST',
+                    params: { uploadType: 'multipart' },
+                    headers: { 'Content-Type': `multipart/related; boundary=${form._boundary}` },
+                    body: form,
+                });
+                appDataFileId = response.result.id;
+            }
+
             alert('Data saved to Google Drive!');
         } catch (error) {
             alert('Error saving data. See console for details.');
