@@ -1,0 +1,108 @@
+/* --- Notes --- */
+.note-list input { margin-bottom: 8px; }
+.note-list button { width: 100%; flex-shrink: 0; }
+
+.note-item {
+    margin: 2px 0;
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all var(--transition-speed);
+}
+
+.note-name-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    cursor: pointer;
+    padding: 8px 0;
+    overflow: hidden;
+}
+.note-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.note-toggle, .note-toggle-placeholder {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+.note-toggle::before {
+    content: '▶';
+    font-size: 0.7em;
+    color: var(--text-muted);
+}
+.note-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.note-item:hover { background: var(--primary-light); color: var(--primary-dark); }
+.note-item.active {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+}
+.note-item:hover .note-toggle::before { color: var(--primary-dark); }
+.note-item.active .note-toggle::before { color: white; }
+
+/* Note Editor */
+.note-editor-area, #noteEditorContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.note-toolbar {
+    background: var(--surface-color);
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+}
+.note-toolbar button {
+    padding: 6px 12px;
+    border-radius: var(--border-radius-md);
+    background: transparent;
+}
+.note-toolbar button:hover { background: var(--primary-light); color: var(--primary-dark); }
+.note-toolbar .remove-btn {
+    margin-left: auto;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+.note-toolbar .remove-btn:hover {
+    background: #ffcdd2;
+    color: #c62828;
+}
+
+#notesEditor {
+    width: 100%;
+    flex-grow: 1;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    padding: 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-y: auto;
+    background: var(--surface-color);
+}
+#notesEditor:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px hsla(var(--primary-hue), 45%, 48%, 0.2);
+}
