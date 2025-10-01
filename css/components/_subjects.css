@@ -1,0 +1,96 @@
+/* --- Subjects & Lectures --- */
+.subject-list input { margin-bottom: 8px;}
+.subject-list button { width: 100%; flex-shrink: 0; }
+
+.subject-item {
+    margin: 2px 0;
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all var(--transition-speed);
+}
+
+.subject-name-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    cursor: pointer;
+    padding: 8px 0;
+    overflow: hidden;
+}
+
+.subject-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.subject-toggle, .subject-toggle-placeholder {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.subject-toggle::before {
+    content: '▶';
+    font-size: 0.7em;
+    color: var(--text-muted);
+}
+.subject-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.subject-item:hover { background: var(--primary-light); color: var(--primary-dark); }
+.subject-item.active {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+}
+.subject-item:hover .subject-toggle::before { color: var(--primary-dark); }
+.subject-item.active .subject-toggle::before { color: white; }
+
+/* Lecture Card */
+#lectureList { flex-grow: 1; overflow-y: auto; min-height: 0; } 
+.lecture-card {
+  display: flex;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 12px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  align-items: center;
+  transition: all var(--transition-speed);
+}
+.lecture-card:hover { 
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+.lecture-left iframe {
+  width: 128px;
+  height: 72px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+}
+.lecture-right {
+  flex: 1;
+  margin-left: 12px;
+}
+.lecture-title-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 8px; 
+}
+.lecture-title-header h4 { margin: 0; font-size: 0.95rem; }
+.lecture-actions { display: flex; gap: 8px; }
+.lecture-actions button { padding: 5px 10px; }

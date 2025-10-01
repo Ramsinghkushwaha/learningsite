@@ -1,0 +1,70 @@
+/* --- Layout & Main Containers --- */
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1;
+    padding: 32px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.tab {
+    display: none;
+    height: 100%;
+    flex-direction: column;
+}
+
+.tab.active {
+    display: flex;
+}
+
+.tab > h2 { 
+    margin-bottom: 24px;
+    flex-shrink: 0;
+}
+
+.subjects-container, .notes-container, .quizzes-container {
+    max-height: calc(100vh - 100px);
+    display: flex;
+    flex-grow: 1; 
+    min-height: 0; 
+}
+
+.subject-list, .note-list, .quiz-subject-list {
+    width: 280px;
+    border-right: 1px solid var(--border-color);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+}
+
+.lectures-area, .note-editor-area, .quizzes-area {
+    flex: 1;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.lectures-area > h3, .note-editor-area > h3, .quizzes-area > h3 {
+    margin-bottom: 16px;
+    flex-shrink: 0;
+}
+
+footer {
+    padding: 24px;
+    background-color: var(--surface-color);
+    text-align: center;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
