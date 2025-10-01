@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decode+</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <div class="main-wrapper">
+    <nav>
+      <div class="nav-buttons">
+          <h2>📚 Decode+</h2>
+          <button class="nav-tab-btn active" data-tab="dashboard"><span class="icon">🏠</span><span class="text"> Dashboard</span></button>
+          <button class="nav-tab-btn" data-tab="subjects"><span class="icon">📖</span><span class="text"> Subjects</span></button>
+          <button class="nav-tab-btn" data-tab="notes"><span class="icon">📔</span><span class="text"> Notes</span></button>
+          <button class="nav-tab-btn" data-tab="tasks"><span class="icon">📅</span><span class="text"> Tasks</span></button>
+          <button class="nav-tab-btn" data-tab="quizzes"><span class="icon">📝</span><span class="text"> Quizzes</span></button>
+          <button class="nav-tab-btn" data-tab="progress"><span class="icon">📊</span><span class="text"> Progress</span></button>
+      </div>
+      <div class="nav-right-controls">
+        <div class="pomodoro-timer">
+            <div id="pomodoro-display">25:00</div>
+            <div class="actions-container">
+                <button class="actions-menu-btn">⋮</button>
+                <div class="actions-menu">
+                    <button class="actions-menu-item" id="pomodoro-start">Start</button>
+                    <button class="actions-menu-item" id="pomodoro-reset">Reset</button>
+                    <hr style="margin: 4px 0;">
+                    <button class="actions-menu-item active" data-mode="pomodoro">Pomodoro</button>
+                    <button class="actions-menu-item" data-mode="shortBreak">Short Break</button>
+                    <button class="actions-menu-item" data-mode="longBreak">Long Break</button>
+                </div>
+            </div>
+        </div>
+        <button class="secondary-btn" id="syncButton" style="display: none;">✓ Synced</button>
+        <button class="primary-btn" id="authButton">Login</button>
+      </div>
+    </nav>
+
+    <div class="content">
+      <div id="dashboard" class="tab active"></div>
+
+      <div id="subjects" class="tab">
+        <div class="subjects-container">
+          <div class="subject-list">
+            <input id="subjectNameInput" type="text" placeholder="Add New Subject">
+            <button id="addSubjectBtn" class="primary-btn">+ Add Subject</button>
+            <div class="list-scroll-area">
+              <hr>
+              <div id="subjectList"></div>
+            </div>
+          </div>
+          <div class="lectures-area">
+            <h3 id="subjectTitle">Select a subject to view lectures</h3>
+            <div id="lectureControls" style="display:none; gap: 10px; margin-bottom: 10px; flex-shrink: 0;">
+              <input id="lectureUrlInput" type="text" placeholder="YouTube video or playlist link" style="flex: 1;">
+              <button id="addLectureBtn" class="primary-btn">+ Add Content</button>
+            </div>
+            <hr id="lectureHr" style="display: none; flex-shrink: 0;">
+            <div id="lectureList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="notes" class="tab">
+        <div class="notes-container">
+          <div class="note-list">
+            <input id="noteTitleInput" type="text" placeholder="New Note Title">
+            <button id="addNoteBtn" class="primary-btn">+ Add Note</button>
+            <div class="list-scroll-area">
+              <hr>
+              <div id="notesList"></div>
+            </div>
+          </div>
+          <div class="note-editor-area">
+            <h3 id="currentNoteTitle">Select a note to get started</h3>
+            <div id="noteEditorContainer" style="display:none;">
+              <div class="note-toolbar">
+                <button title="Bold (Ctrl+B)" data-command="bold"><b>B</b></button>
+                <button title="Bulleted List" data-command="insertUnorderedList">●</button>
+                <button title="Numbered List" data-command="insertOrderedList">1.</button>
+                <button title="Highlight" data-command="backColor" data-value="#FFFFA7">🎨</button>
+                <button title="Remove Highlight" data-command="backColor" data-value="white">🚫</button>
+                <button id="deleteCurrentNoteBtn" class="remove-btn">Delete Note</button>
+              </div>
+              <div id="notesEditor" contenteditable="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tasks" class="tab">
+        <div class="task-form">
+          <input type="text" id="taskInput" placeholder="New task description...">
+          <input type="date" id="taskDueDate">
+          <select id="taskPriority">
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+          <button id="addTaskBtn" class="primary-btn">+ Add Task</button>
+        </div>
+        <div class="task-board">
+          <div class="task-column">
+            <h3>To Do</h3>
+            <div class="tasks-container" id="todo-tasks"></div>
+          </div>
+          <div class="task-column">
+            <h3>In Progress</h3>
+            <div class="tasks-container" id="inprogress-tasks"></div>
+          </div>
+          <div class="task-column">
+            <h3>Done</h3>
+            <div class="tasks-container" id="done-tasks"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="quizzes" class="tab">
+        <h2>Quizzes & Flashcards</h2>
+        <div class="quizzes-container">
+          <div class="quiz-subject-list">
+            <h3>Select a Subject</h3>
+            <div class="list-scroll-area">
+              <div id="quizSubjectList"></div>
+            </div>
+          </div>
+          <div class="quizzes-area">
+            <h3 id="quizSubjectTitle">Select a subject to manage flashcards</h3>
+            <div id="quizContent" style="display: none; flex-grow: 1; min-height: 0; display: flex; flex-direction: column;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="progress" class="tab"></div>
+    </div>
+  </div>
+
+  <footer>
+      <p>&copy; 2025 Decode+. All rights reserved.</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+
+  <script src="https://apis.google.com/js/api.js" async defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+</html>
